@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// Import other route modules
-const appointmentRoutes = require("./appointment.routes");
+// Importing individual route modules
+const patientRoutes = require("./patient.routes");
 
-// Use the appointment routes
-router.use("/api/appointments", appointmentRoutes); // Added leading slash
+// Use the imported routes
+router.use("/patients", patientRoutes);
 
+// Export the router
 module.exports = router;
