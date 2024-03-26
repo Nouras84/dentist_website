@@ -1,5 +1,21 @@
 const mongoose = require("mongoose");
 
+const treatmentSchema = new mongoose.Schema({
+  data: Date,
+  procedimento: String,
+  dentista: String,
+  valor: mongoose.Schema.Types.Decimal128, // or Number, depending on how you handle currency
+  notaFiscal: String,
+  formaDePagamento: String,
+});
+
+const procedureSchema = new mongoose.Schema({
+  dente: String,
+  face: String,
+  situacao: String,
+  mes: String,
+});
+
 const patientSchema = new mongoose.Schema({
   nome: String,
   dataConsulta: Date,
@@ -85,6 +101,8 @@ const patientSchema = new mongoose.Schema({
     gastriteUlceras: Boolean,
     outrasDoencas: String,
   },
+  procedimentos: [procedureSchema], // Added procedure section
+  tratamentosExecutados: [treatmentSchema],
   observacoes: String,
 });
 
