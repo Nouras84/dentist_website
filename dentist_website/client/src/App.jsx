@@ -90,6 +90,10 @@ function App() {
           <Routes>
             <Route path="/" element={<PatientList />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/add-patient/:patientId"
+              element={<PatientFormPage />}
+            />
             <Route path="/add-patient" element={<PatientFormPage />} />
             {/* Add more routes as needed */}
           </Routes>

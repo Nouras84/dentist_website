@@ -2,6 +2,8 @@ import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import FormularioDoPaciente from "./FormularioDoPaciente";
+import { useParams } from "react-router-dom";
+
 import HistoricoBucal from "./HistoricoBucal";
 import InformacoesGerais from "./InformacoesGerais";
 import Procedimentos from "./Procedimentos";
@@ -10,6 +12,7 @@ import Fotografias from "./Fotografias";
 import "./styles.css";
 
 function PatientFormPage() {
+  const { patientId } = useParams();
   return (
     <Tabs>
       <TabList>
@@ -22,22 +25,22 @@ function PatientFormPage() {
       </TabList>
 
       <TabPanel>
-        <FormularioDoPaciente />
+        <FormularioDoPaciente patientId={patientId} />
       </TabPanel>
       <TabPanel>
-        <HistoricoBucal />
+        <HistoricoBucal patientId={patientId} />
       </TabPanel>
       <TabPanel>
-        <InformacoesGerais />
+        <InformacoesGerais patientId={patientId} />
       </TabPanel>
       <TabPanel>
-        <Procedimentos />
+        <Procedimentos patientId={patientId} />
       </TabPanel>
       <TabPanel>
-        <TratamentoExecutado />
+        <TratamentoExecutado patientId={patientId} />
       </TabPanel>
       <TabPanel>
-        <Fotografias />
+        <Fotografias patientId={patientId} />
       </TabPanel>
     </Tabs>
   );

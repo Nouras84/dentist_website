@@ -1,140 +1,5 @@
-// import React, { createContext, useContext, useState } from "react";
-
-// const PatientContext = createContext();
-
-// export const usePatientInfo = () => useContext(PatientContext);
-// export const PatientProvider = ({ children }) => {
-//   const [patientInfo, setPatientInfo] = useState({
-//     patientId: "",
-//     nome: "",
-//     dataConsulta: "",
-//     idade: "",
-//     cpf: "",
-//     dataNascimento: "",
-//     genero: "",
-//     racaCor: "",
-//     estadoCivil: "",
-//     plano: "",
-//     profissao: "",
-//     escolaridade: "",
-//     endereco: {
-//       rua: "",
-//       numero: "",
-//       bairro: "",
-//       cidade: "",
-//       estado: "",
-//     },
-//     contato: {
-//       whatsapp: "",
-//       instagram: "",
-//       telefone: "",
-//       email: "",
-//     },
-//     interesse: [],
-//     musicas: [],
-//     profilePhoto: null,
-//     historicoBucal: {
-//       frequenciaDentista: "",
-//       mastigaLados: "",
-//       escovaDentesFrequencia: "",
-//       rangeDentes: "",
-//       apreensivoTratamento: "",
-//       gengivaSangra: "",
-//       problemaTratamentoOdontologico: "",
-//       problemaTratamentoOdontologicoDetails: "",
-//       usaFioDental: "",
-//       dentesSensiveis: "",
-//       metodoAuxiliar: "",
-//       mordeLinguaLabioBochecha: "",
-//       dorMastigar: "",
-//       usaProteseImplante: "",
-//       usaProteseImplanteDetails: "",
-//       feridaBoca: "",
-//       feridaBocaDetails: "",
-//       dentesAfetamSaude: "",
-//       respiraPelaBoca: "",
-//     },
-//     informacoesGerais: {
-//       tratamentoMedico: "",
-//       tratamentoMedicoDetails: "",
-//       alergiaMedicamentosa: "",
-//       alergiaMedicamentosaDetails: "",
-//       consideraNervoso: "",
-//       alergiaOutros: "",
-//       alergiaOutrosDetails: "",
-//       consideraAnsioso: "",
-//       hospitalizadoCirurgia: "",
-//       hospitalizadoCirurgiaDetails: "",
-//       vomitaFrequentemente: "",
-//       gravida: "",
-//       gravidaDetails: "",
-//       amamentando: "",
-//       faltaArCansaco: "",
-//       faltaArCansacoDetails: "",
-//       doresPeito: "",
-//       alteracaoPressao: "",
-//       historicoInfarto: "",
-//       historicoInfartoDetails: "",
-//       historicoAVC: "",
-//       historicoAVCDetails: "",
-//       historicoAsma: "",
-//       historicoAsmaDetails: "",
-//       historicoDiabetes: "",
-//       historicoDiabetesDetails: "",
-//       tuberculose: "",
-//       tuberculoseDetails: "",
-//       sedeConstante: "",
-//       urinaNoite: "",
-//       alteracaoHormonal: "",
-//       alteracaoHormonalDetails: "",
-//       desmaioDistrimia: "",
-//       desmaioDistrimiaDetails: "",
-//       hipotireoidismoHipertireoidismo: "",
-//       hipotireoidismoHipertireoidismoDetails: "",
-//       dificuldadeMastigar: "",
-//       tpmMenopausa: "",
-//       tpmMenopausaDetails: "",
-//       calculoRenal: "",
-//       calculoRenalDetails: "",
-//       reposicaoHormonal: "",
-//       osteoporose: "",
-//       anemia: "",
-//       leucemia: "",
-//       hemofilia: "",
-//       ingestaoAlcoolica: "",
-//       tabagista: "",
-//       gastrite: "",
-//       ulceras: "",
-//       hepatite: "",
-//       sangramentoPosTraumaCirurgia: "",
-//       sangramentoPosTraumaCirurgiaDetails: "",
-//       outrasDoencas: "",
-//     },
-//   });
-
-//   // // Use useEffect to log the patientId whenever it changes
-//   // useEffect(() => {
-//   //   console.log("Patient ID from context:", patientInfo.patientId);
-//   // }, [patientInfo.patientId]); // Dependency array with patientId
-
-//   // Function to update patient ID separately if needed
-//   const setPatientId = (id) => {
-//     console.log("Setting patientId:", id);
-//     setPatientInfo((prev) => ({ ...prev, patientId: id }));
-//   };
-
-//   return (
-//     <PatientContext.Provider
-//       value={{ patientInfo, setPatientInfo, setPatientId }}
-//     >
-//       {children}
-//     </PatientContext.Provider>
-//   );
-// };
-
-// export default PatientProvider;
-
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const PatientContext = createContext();
 
@@ -260,10 +125,25 @@ export const PatientProvider = ({ children }) => {
     procedimentos: [],
   });
 
-  const setPatientId = (id) => {
-    console.log("Setting patientId:", id);
-    setPatientInfo((prev) => ({ ...prev, patientId: id }));
+  // Function to create a new empty patient record
+  const createEmptyPatient = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5005/patients/create-empty-patient"
+      );
+      setPatientInfo((prev) => ({
+        ...prev,
+        patientId: response.data.patientId,
+      }));
+    } catch (error) {
+      console.error("Failed to create empty patient:", error);
+    }
   };
+
+  // Invoke createEmptyPatient when the component mounts
+  useEffect(() => {
+    createEmptyPatient();
+  }, []);
 
   const addProcedure = (procedure) => {
     setPatientInfo((prev) => ({
@@ -318,7 +198,7 @@ export const PatientProvider = ({ children }) => {
       value={{
         patientInfo,
         setPatientInfo,
-        setPatientId,
+
         addProcedure,
         updateProcedure,
         addTreatment,

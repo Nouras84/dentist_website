@@ -1,17 +1,186 @@
-// Importing necessary hooks and context
-import React from "react";
+// import React, { useEffect } from "react";
+// import axios from "axios";
+// import { usePatientInfo } from "../../../context/PatientContext";
+// import { useNavigate, useParams } from "react-router-dom";
+
+// import "./styles.css";
+
+// function FormularioDoPaciente() {
+//   const navigate = useNavigate();
+//   const { patientId } = useParams();
+//   const { patientInfo, setPatientInfo } = usePatientInfo();
+
+//   useEffect(() => {
+//     const createPatient = async () => {
+//       try {
+//         const response = await axios.post(
+//           "http://localhost:5005/patients/create-empty-patient"
+//         );
+//         navigate(`/add-patient/${response.data.patientId}`);
+//       } catch (error) {
+//         console.error("Error creating empty patient record:", error);
+//         alert("Failed to initialize patient record.");
+//       }
+//     };
+
+//     if (!patientId) {
+//       createPatient();
+//     }
+
+//     const autosaveInterval = setInterval(() => {
+//       autosaveForm();
+//     }, 30000); // Autosave every 30 seconds
+
+//     return () => clearInterval(autosaveInterval); // Cleanup on unmount
+//   }, [navigate, patientId, patientInfo]);
+
+//   const handleChange = (event) => {
+//     const { name, value } = event.target;
+//     const keys = name.split(".");
+//     if (keys.length === 2) {
+//       setPatientInfo((prevState) => ({
+//         ...prevState,
+//         [keys[0]]: {
+//           ...prevState[keys[0]],
+//           [keys[1]]: value,
+//         },
+//       }));
+//     } else {
+//       setPatientInfo((prevState) => ({
+//         ...prevState,
+//         [name]: value,
+//       }));
+//     }
+//   };
+
+//   const handleFileChange = (event) => {
+//     if (event.target.files.length > 0) {
+//       const file = event.target.files[0];
+//       setPatientInfo((prevState) => ({
+//         ...prevState,
+//         profilePhoto: file,
+//       }));
+//     }
+//   };
+
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
+//     saveData(patientInfo); // Save on submit
+//   };
+
+//   const autosaveForm = () => {
+//     console.log("Autosaving data...");
+//     saveData(patientInfo);
+//   };
+
+//   const saveData = async (data) => {
+//     const formData = new FormData();
+//     Object.keys(data).forEach((key) => {
+//       if (typeof data[key] === "object" && data[key] !== null) {
+//         Object.keys(data[key]).forEach((subKey) => {
+//           formData.append(`${key}.${subKey}`, data[key][subKey]);
+//         });
+//       } else {
+//         formData.append(key, data[key]);
+//       }
+//     });
+
+//     if (data.profilePhoto) {
+//       formData.append("profilePhoto", data.profilePhoto);
+//     }
+
+//     try {
+//       await axios.patch(
+//         `http://localhost:5005/patients/${patientId}/update-patient`,
+//         formData,
+//         {
+//           headers: { "Content-Type": "multipart/form-data" },
+//         }
+//       );
+//       console.log("Data autosaved successfully");
+//     } catch (error) {
+//       console.error("Failed to autosave data", error);
+//     }
+//   };
+
+import React, { useEffect, useCallback } from "react";
 import axios from "axios";
-import { usePatientInfo } from "../../../context/PatientContext"; // Import the context hook
+import { usePatientInfo } from "../../../context/PatientContext";
+import { useNavigate, useParams } from "react-router-dom";
+
 import "./styles.css";
 
 function FormularioDoPaciente() {
-  // Using the context to manage the patient info state
-  const { patientInfo, setPatientInfo, setPatientId } = usePatientInfo();
+  const navigate = useNavigate();
+  const { patientId } = useParams();
+  const { patientInfo, setPatientInfo } = usePatientInfo();
+
+  // Define saveData using useCallback to prevent function redefinition on each render
+  const saveData = useCallback(
+    async (data) => {
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        if (typeof data[key] === "object" && data[key] !== null) {
+          Object.keys(data[key]).forEach((subKey) => {
+            formData.append(`${key}.${subKey}`, data[key][subKey]);
+          });
+        } else {
+          formData.append(key, data[key]);
+        }
+      });
+
+      if (data.profilePhoto) {
+        formData.append("profilePhoto", data.profilePhoto);
+      }
+
+      try {
+        await axios.patch(
+          `http://localhost:5005/patients/${patientId}/update-patient`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        console.log("Data saved successfully");
+      } catch (error) {
+        console.error("Failed to save data", error);
+      }
+    },
+    [patientId]
+  );
+
+  // Autosave function defined with useCallback to utilize memoized version
+  const autosaveForm = useCallback(() => {
+    console.log("Autosaving data...");
+    saveData(patientInfo);
+  }, [patientInfo, saveData]);
+
+  // Effect for autosaving at intervals
+  useEffect(() => {
+    const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
+    return () => clearInterval(autosaveInterval); // Cleanup on unmount
+  }, [autosaveForm]);
+
+  useEffect(() => {
+    if (!patientId) {
+      const createPatient = async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:5005/patients/create-empty-patient"
+          );
+          navigate(`/add-patient/${response.data.patientId}`);
+        } catch (error) {
+          console.error("Error creating empty patient record:", error);
+          alert("Failed to initialize patient record.");
+        }
+      };
+      createPatient();
+    }
+  }, [navigate, patientId]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     const keys = name.split(".");
-    if (keys.length === 2) {
+    if (keys.length > 1) {
+      // Handle nested objects such as "endereco.rua"
       setPatientInfo((prevState) => ({
         ...prevState,
         [keys[0]]: {
@@ -20,6 +189,7 @@ function FormularioDoPaciente() {
         },
       }));
     } else {
+      // Handle top-level properties like "nome"
       setPatientInfo((prevState) => ({
         ...prevState,
         [name]: value,
@@ -37,133 +207,9 @@ function FormularioDoPaciente() {
     }
   };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   if (!patientInfo.nome) {
-  //     alert("Por favor, insira um nome."); // Ensuring the name field is not empty
-  //     return;
-  //   }
-
-  //   // Check if patient name already exists
-  //   try {
-  //     const nameCheckResponse = await axios.get(
-  //       `http://localhost:5005/patients/check-name?name=${encodeURIComponent(
-  //         patientInfo.nome
-  //       )}`
-  //     );
-  //     if (nameCheckResponse.data.exists) {
-  //       alert(
-  //         "O nome do paciente já existe. Por favor, use um nome diferente."
-  //       );
-  //       return;
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao verificar o nome do paciente", error);
-  //     alert("Erro ao verificar o nome do paciente.");
-  //     return;
-  //   }
-
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    if (!patientInfo.nome) {
-      alert("Por favor, insira um nome."); // Ensuring the name field is not empty
-      return;
-    }
-
-    // Check if patient name already exists
-    try {
-      const nameCheckResponse = await axios.get(
-        `http://localhost:5005/patients/check-name?name=${encodeURIComponent(
-          patientInfo.nome
-        )}`
-      );
-      if (nameCheckResponse.data.exists) {
-        alert(
-          "O nome do paciente já existe. Por favor, use um nome diferente."
-        );
-        return;
-      }
-    } catch (error) {
-      console.error("Erro ao verificar o nome do paciente", error);
-      alert("Erro ao verificar o nome do paciente.");
-      return;
-    }
-
-    //   // Proceed with submitting form data if name does not exist
-    //   const formData = new FormData();
-    //   Object.keys(patientInfo).forEach((key) => {
-    //     if (key === "profilePhoto" && patientInfo[key]) {
-    //       formData.append(key, patientInfo[key]);
-    //     } else if (
-    //       typeof patientInfo[key] === "object" &&
-    //       patientInfo[key] !== null
-    //     ) {
-    //       Object.keys(patientInfo[key]).forEach((subKey) => {
-    //         formData.append(`${key}.${subKey}`, patientInfo[key][subKey]);
-    //       });
-    //     } else {
-    //       formData.append(key, patientInfo[key]);
-    //     }
-    //   });
-
-    //   try {
-    //     const response = await axios.post(
-    //       "http://localhost:5005/patients/add-patient",
-    //       formData,
-    //       {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //     alert("Paciente adicionado com sucesso!");
-    //     console.log("Response Data:", response.data);
-    //     // Optionally reset form or redirect user
-    //   } catch (error) {
-    //     console.error("Falha ao adicionar novo paciente", error);
-    //     alert("Falha ao adicionar novo paciente!");
-    //   }
-    // };
-    // Proceed with submitting form data if name does not exist
-    const formData = new FormData();
-    Object.keys(patientInfo).forEach((key) => {
-      if (key === "profilePhoto" && patientInfo[key]) {
-        formData.append(key, patientInfo[key]);
-      } else if (
-        typeof patientInfo[key] === "object" &&
-        patientInfo[key] !== null
-      ) {
-        Object.keys(patientInfo[key]).forEach((subKey) => {
-          formData.append(`${key}.${subKey}`, patientInfo[key][subKey]);
-        });
-      } else {
-        formData.append(key, patientInfo[key]);
-      }
-    });
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5005/patients/add-patient",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (response.data && response.data.patientId) {
-        setPatientId(response.data.patientId);
-        console.log("Patient ID received and set:", response.data.patientId);
-      } else {
-        console.log("Patient ID not received in response");
-      }
-      alert("Paciente adicionado com sucesso!");
-      console.log("Response Data:", response.data);
-      // Optionally reset form or redirect user
-    } catch (error) {
-      console.error("Falha ao adicionar novo paciente", error);
-      alert("Falha ao adicionar novo paciente!");
-    }
+    autosaveForm(); // Trigger autosave on submit
   };
 
   return (
