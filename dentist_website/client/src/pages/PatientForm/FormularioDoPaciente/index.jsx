@@ -1,5 +1,6 @@
-// import React, { useEffect } from "react";
+// import React, { useEffect, useCallback } from "react";
 // import axios from "axios";
+
 // import { usePatientInfo } from "../../../context/PatientContext";
 // import { useNavigate, useParams } from "react-router-dom";
 
@@ -10,34 +11,72 @@
 //   const { patientId } = useParams();
 //   const { patientInfo, setPatientInfo } = usePatientInfo();
 
-//   useEffect(() => {
-//     const createPatient = async () => {
-//       try {
-//         const response = await axios.post(
-//           "http://localhost:5005/patients/create-empty-patient"
-//         );
-//         navigate(`/add-patient/${response.data.patientId}`);
-//       } catch (error) {
-//         console.error("Error creating empty patient record:", error);
-//         alert("Failed to initialize patient record.");
+//   // Define saveData using useCallback to prevent function redefinition on each render
+//   const saveData = useCallback(
+//     async (data) => {
+//       const formData = new FormData();
+//       Object.keys(data).forEach((key) => {
+//         if (typeof data[key] === "object" && data[key] !== null) {
+//           Object.keys(data[key]).forEach((subKey) => {
+//             formData.append(`${key}.${subKey}`, data[key][subKey]);
+//           });
+//         } else {
+//           formData.append(key, data[key]);
+//         }
+//       });
+
+//       if (data.profilePhoto) {
+//         formData.append("profilePhoto", data.profilePhoto);
 //       }
-//     };
 
-//     if (!patientId) {
-//       createPatient();
-//     }
+//       try {
+//         await axios.patch(
+//           `http://localhost:5005/patients/${patientId}/update-patient`,
+//           formData,
+//           { headers: { "Content-Type": "multipart/form-data" } }
+//         );
+//         console.log("Data saved successfully");
+//       } catch (error) {
+//         console.error("Failed to save data", error);
+//       }
+//     },
+//     [patientId]
+//   );
 
-//     const autosaveInterval = setInterval(() => {
-//       autosaveForm();
-//     }, 30000); // Autosave every 30 seconds
+//   // Autosave function defined with useCallback to utilize memoized version
+//   const autosaveForm = useCallback(() => {
+//     console.log("Autosaving data...");
+//     saveData(patientInfo);
+//   }, [patientInfo, saveData]);
 
+//   // Effect for autosaving at intervals
+//   useEffect(() => {
+//     const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
 //     return () => clearInterval(autosaveInterval); // Cleanup on unmount
-//   }, [navigate, patientId, patientInfo]);
+//   }, [autosaveForm]);
+
+//   // useEffect(() => {
+//   //   if (!patientId) {
+//   //     const createPatient = async () => {
+//   //       try {
+//   //         const response = await axios.post(
+//   //           "http://localhost:5005/patients/create-empty-patient"
+//   //         );
+//   //         navigate(`/add-patient/${response.data.patientId}`);
+//   //       } catch (error) {
+//   //         console.error("Error creating empty patient record:", error);
+//   //         alert("Failed to initialize patient record.");
+//   //       }
+//   //     };
+//   //     createPatient();
+//   //   }
+//   // }, [navigate, patientId]);
 
 //   const handleChange = (event) => {
 //     const { name, value } = event.target;
 //     const keys = name.split(".");
-//     if (keys.length === 2) {
+//     if (keys.length > 1) {
+//       // Handle nested objects such as "endereco.rua"
 //       setPatientInfo((prevState) => ({
 //         ...prevState,
 //         [keys[0]]: {
@@ -46,6 +85,7 @@
 //         },
 //       }));
 //     } else {
+//       // Handle top-level properties like "nome"
 //       setPatientInfo((prevState) => ({
 //         ...prevState,
 //         [name]: value,
@@ -63,69 +103,84 @@
 //     }
 //   };
 
-//   const handleSubmit = async (event) => {
+//   const handleSubmit = (event) => {
 //     event.preventDefault();
-//     saveData(patientInfo); // Save on submit
-//   };
-
-//   const autosaveForm = () => {
-//     console.log("Autosaving data...");
-//     saveData(patientInfo);
-//   };
-
-//   const saveData = async (data) => {
-//     const formData = new FormData();
-//     Object.keys(data).forEach((key) => {
-//       if (typeof data[key] === "object" && data[key] !== null) {
-//         Object.keys(data[key]).forEach((subKey) => {
-//           formData.append(`${key}.${subKey}`, data[key][subKey]);
-//         });
-//       } else {
-//         formData.append(key, data[key]);
-//       }
-//     });
-
-//     if (data.profilePhoto) {
-//       formData.append("profilePhoto", data.profilePhoto);
-//     }
-
-//     try {
-//       await axios.patch(
-//         `http://localhost:5005/patients/${patientId}/update-patient`,
-//         formData,
-//         {
-//           headers: { "Content-Type": "multipart/form-data" },
-//         }
-//       );
-//       console.log("Data autosaved successfully");
-//     } catch (error) {
-//       console.error("Failed to autosave data", error);
-//     }
+//     autosaveForm(); // Trigger autosave on submit
 //   };
 
 import React, { useEffect, useCallback } from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext";
-import { useNavigate, useParams } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import "./styles.css";
 
 function FormularioDoPaciente() {
-  const navigate = useNavigate();
   const { patientId } = useParams();
   const { patientInfo, setPatientInfo } = usePatientInfo();
 
   // Define saveData using useCallback to prevent function redefinition on each render
+  // const saveData = useCallback(
+  //   async (data) => {
+  //     const formData = new FormData();
+  //     Object.keys(data).forEach((key) => {
+  //       if (typeof data[key] === "object" && data[key] !== null) {
+  //         Object.keys(data[key]).forEach((subKey) => {
+  //           formData.append(`${key}.${subKey}`, data[key][subKey]);
+  //         });
+  //       } else {
+  //         formData.append(key, data[key]);
+  //       }
+  //     });
+
+  //     if (data.profilePhoto) {
+  //       formData.append("profilePhoto", data.profilePhoto);
+  //     }
+
+  //     try {
+  //       await axios.patch(
+  //         `http://localhost:5005/patients/${patientId}/update-patient`,
+  //         formData,
+  //         { headers: { "Content-Type": "multipart/form-data" } }
+  //       );
+  //       console.log("Data saved successfully");
+  //     } catch (error) {
+  //       console.error("Failed to save data", error);
+  //     }
+  //   },
+  //   [patientId]
+  // );
+
   const saveData = useCallback(
     async (data) => {
       const formData = new FormData();
-      Object.keys(data).forEach((key) => {
-        if (typeof data[key] === "object" && data[key] !== null) {
-          Object.keys(data[key]).forEach((subKey) => {
-            formData.append(`${key}.${subKey}`, data[key][subKey]);
-          });
-        } else {
-          formData.append(key, data[key]);
+      const relevantFields = [
+        "profilePhoto", // Assuming the file itself is handled separately
+        "nome",
+        "dataConsulta",
+
+        "cpf",
+        "dataNascimento",
+        "genero",
+        "racaCor",
+        "estadoCivil",
+        "plano",
+        "profissao",
+        "escolaridade",
+        "endereco.rua",
+        "endereco.numero",
+        "endereco.bairro",
+        "endereco.cidade",
+        "endereco.estado",
+        "contato.whatsapp",
+        "contato.instagram",
+        "contato.telefone",
+        "contato.email",
+      ];
+
+      relevantFields.forEach((field) => {
+        const value = field.split(".").reduce((o, key) => o[key], data); // Access nested properties
+        if (value != null) {
+          formData.append(field, value);
         }
       });
 
@@ -148,9 +203,40 @@ function FormularioDoPaciente() {
   );
 
   // Autosave function defined with useCallback to utilize memoized version
+  // const autosaveForm = useCallback(() => {
+  //   console.log("Autosaving data...");
+  //   saveData(patientInfo);
+  // }, [patientInfo, saveData]);
   const autosaveForm = useCallback(() => {
     console.log("Autosaving data...");
-    saveData(patientInfo);
+    const relevantInfo = {
+      nome: patientInfo.nome,
+      cpf: patientInfo.cpf,
+      dataNascimento: patientInfo.dataNascimento,
+      genero: patientInfo.genero,
+      racaCor: patientInfo.racaCor,
+      estadoCivil: patientInfo.estadoCivil,
+      plano: patientInfo.plano,
+      profissao: patientInfo.profissao,
+      escolaridade: patientInfo.escolaridade,
+      dataConsulta: patientInfo.dataConsulta,
+      endereco: {
+        rua: patientInfo.endereco.rua,
+        numero: patientInfo.endereco.numero,
+        bairro: patientInfo.endereco.bairro,
+        cidade: patientInfo.endereco.cidade,
+        estado: patientInfo.endereco.estado,
+      },
+      contato: {
+        whatsapp: patientInfo.contato.whatsapp,
+        instagram: patientInfo.contato.instagram,
+        telefone: patientInfo.contato.telefone,
+        email: patientInfo.contato.email,
+      },
+      profilePhoto: patientInfo.profilePhoto,
+    };
+
+    saveData(relevantInfo);
   }, [patientInfo, saveData]);
 
   // Effect for autosaving at intervals
@@ -158,23 +244,6 @@ function FormularioDoPaciente() {
     const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
     return () => clearInterval(autosaveInterval); // Cleanup on unmount
   }, [autosaveForm]);
-
-  useEffect(() => {
-    if (!patientId) {
-      const createPatient = async () => {
-        try {
-          const response = await axios.post(
-            "http://localhost:5005/patients/create-empty-patient"
-          );
-          navigate(`/add-patient/${response.data.patientId}`);
-        } catch (error) {
-          console.error("Error creating empty patient record:", error);
-          alert("Failed to initialize patient record.");
-        }
-      };
-      createPatient();
-    }
-  }, [navigate, patientId]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -211,7 +280,6 @@ function FormularioDoPaciente() {
     event.preventDefault();
     autosaveForm(); // Trigger autosave on submit
   };
-
   return (
     <form onSubmit={handleSubmit} className="patient-form">
       <fieldset>
@@ -241,7 +309,7 @@ function FormularioDoPaciente() {
             onChange={handleChange}
           />
         </div>
-        <div>
+        {/* <div>
           <label>Idade:</label>
           <input
             type="number"
@@ -250,7 +318,7 @@ function FormularioDoPaciente() {
             value={patientInfo.idade}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <div>
           <label>CPF:</label>
           <input
@@ -455,7 +523,7 @@ function FormularioDoPaciente() {
           />
         </div>
       </fieldset>
-      <fieldset>
+      {/* <fieldset>
         <legend>Preferências do Paciente </legend>
 
         <div>
@@ -478,7 +546,7 @@ function FormularioDoPaciente() {
             onChange={handleChange}
           />
         </div>
-      </fieldset>
+      </fieldset> */}
       <button type="submit">Submit</button>
     </form>
   );

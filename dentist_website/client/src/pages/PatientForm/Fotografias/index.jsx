@@ -1,42 +1,44 @@
-// src/pages/PatientForm/Fotografias/index.jsx
-
-import React, { useState } from "react";
-import "./styles.css"; // Assuming you have some basic styling
+import React from "react";
+import { usePatientInfo } from "../../../context/PatientContext"; // Adjust this path as necessary
+import "./styles.css";
 
 function Fotografias() {
-  const [photos, setPhotos] = useState([]);
+  const { patientInfo, updatePatientInfo } = usePatientInfo();
 
   const handleAddPhoto = () => {
-    setPhotos([...photos, { path: "", description: "" }]);
+    const newPhoto = { path: "", description: "", file: null };
+    const updatedFotografias = [...patientInfo.fotografias, newPhoto];
+    updatePatientInfo({ fotografias: updatedFotografias });
   };
 
   const handleFileChange = (event, index) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      const updatedPhotos = [...photos];
-      updatedPhotos[index].path = reader.result; // Saving the base64 encoded image
-      setPhotos(updatedPhotos);
+      const updatedFotografias = [...patientInfo.fotografias];
+      updatedFotografias[index] = {
+        ...updatedFotografias[index],
+        path: reader.result,
+        file: file, // Saving the file for upload
+      };
+      updatePatientInfo({ fotografias: updatedFotografias });
     };
     reader.readAsDataURL(file);
   };
 
   const handleDescriptionChange = (event, index) => {
-    const updatedPhotos = [...photos];
-    updatedPhotos[index].description = event.target.value;
-    setPhotos(updatedPhotos);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Photos Data:", photos);
-    // Here you might handle the submission, e.g., sending data to the backend
+    const updatedFotografias = [...patientInfo.fotografias];
+    updatedFotografias[index] = {
+      ...updatedFotografias[index],
+      description: event.target.value,
+    };
+    updatePatientInfo({ fotografias: updatedFotografias });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="fotografias-form">
+    <div className="fotografias-form">
       <h2>Fotografias</h2>
-      {photos.map((photo, index) => (
+      {patientInfo.fotografias.map((photo, index) => (
         <div key={index} className="photo-entry">
           <input
             type="file"
@@ -54,8 +56,7 @@ function Fotografias() {
       <button type="button" onClick={handleAddPhoto}>
         + Adicionar Foto
       </button>
-      <button type="submit">Salvar</button>
-    </form>
+    </div>
   );
 }
 

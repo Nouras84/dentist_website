@@ -705,7 +705,10 @@ function DentalChart() {
       operation: procedureData.operation,
     };
 
-    console.log("Submitting procedure:", JSON.stringify(newProcedure, null, 2)); // Log the newProcedure object to verify data structure
+    console.log(
+      "Prepared Procedure to Add",
+      JSON.stringify(newProcedure, null, 2)
+    ); // Log the newProcedure object to verify data structure
 
     addProcedure(newProcedure);
     setIsFormModalOpen(false);

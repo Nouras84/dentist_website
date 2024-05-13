@@ -1,3 +1,53 @@
+// import React from "react";
+// import axios from "axios";
+// import { usePatientInfo } from "../../../context/PatientContext"; // Adjust the path as necessary
+
+// import "./styles.css"; // Ensure you have proper CSS for styling the form
+
+// function HistoricoBucal() {
+//   const { patientInfo, setPatientInfo } = usePatientInfo(); // Use the context to manage state
+
+//   const handleChange = (event) => {
+//     const { name, value, type, checked } = event.target;
+//     setPatientInfo((prev) => ({
+//       ...prev,
+//       historicoBucal: {
+//         ...prev.historicoBucal,
+//         [name]: type === "checkbox" ? checked : value,
+//       },
+//     }));
+//   };
+
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
+
+//     const patientId = patientInfo.patientId;
+
+//     if (!patientId) {
+//       alert(
+//         "ID do paciente não encontrado. Por favor, selecione um paciente válido."
+//       );
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.patch(
+//         `http://localhost:5005/patients/${patientId}/dental-history`,
+//         patientInfo.historicoBucal,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+//       alert("Histórico bucal atualizado com sucesso!");
+//       console.log("Response Data:", response.data);
+//     } catch (error) {
+//       console.error("Failed to update dental history", error);
+//       alert("Falha ao atualizar o histórico bucal!");
+//     }
+//   };
+
 import React from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext"; // Adjust the path as necessary
@@ -20,6 +70,7 @@ function HistoricoBucal() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("Submitting Histórico Bucal", patientInfo.historicoBucal);
     const patientId = patientInfo.patientId;
 
     if (!patientId) {
@@ -32,8 +83,15 @@ function HistoricoBucal() {
     try {
       const response = await axios.patch(
         `http://localhost:5005/patients/${patientId}/dental-history`,
-        patientInfo.historicoBucal
+        patientInfo.historicoBucal,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
+      console.log("Response Data:", response.data);
+
       alert("Histórico bucal atualizado com sucesso!");
       console.log("Response Data:", response.data);
     } catch (error) {

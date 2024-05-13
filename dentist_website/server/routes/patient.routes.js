@@ -151,6 +151,63 @@ router.patch("/:patientId/procedimento/:procedureIndex", async (req, res) => {
   }
 });
 
+// PATCH route to update existing photographs for a patient
+router.patch("/:id/photographs", uploadPhotographs, async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
+    if (!patient) {
+      return res.status(404).send({ message: "Patient not found" });
+    }
+
+    // Assuming you are sending photograph updates as an array of objects
+    // Each object contains the 'path' and 'description' of the photograph
+    const updatedPhotographs = req.files.map((file, index) => ({
+      path: file.path,
+      description: req.body.description[index], // Assuming descriptions are sent as an array
+    }));
+
+    // Replace existing photographs array or merge it based on your needs
+    patient.fotografias = updatedPhotographs;
+    await patient.save();
+
+    res.status(200).send({
+      message: "Photographs updated successfully",
+      data: patient.fotografias,
+    });
+  } catch (error) {
+    console.error("Error updating photographs:", error);
+    res
+      .status(500)
+      .send({ message: "Internal server error", details: error.message });
+  }
+});
+
+// PATCH route to update all patient data
+router.patch("/update-all/:id", async (req, res) => {
+  try {
+    console.log("Received update data:", req.body);
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // Find the patient and update
+    const updatedPatient = await Patient.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedPatient) {
+      return res.status(404).send({ message: "Patient not found" });
+    }
+
+    res.status(200).send(updatedPatient);
+  } catch (error) {
+    console.error("Failed to update patient:", error);
+    res
+      .status(500)
+      .send({ message: "Internal server error", details: error.message });
+  }
+});
+
 // DELETE route to remove a specific photograph from a patient
 router.delete("/:id/photograph/:filename", async (req, res) => {
   try {
@@ -304,25 +361,25 @@ router.delete("/:patientId/procedimento/:procedureIndex", async (req, res) => {
 
 // File: routes/patient.js
 
-router.post("/:id/tratamento-executado", async (req, res) => {
-  try {
-    const patient = await Patient.findById(req.params.id);
-    if (!patient) {
-      return res.status(404).send({ message: "Patient not found" });
-    }
-    // Assuming tratamentosExecutados is an array in your patient schema
-    patient.tratamentosExecutados.push(req.body);
-    await patient.save();
-    res
-      .status(201)
-      .send({ message: "Treatment added successfully", data: patient });
-  } catch (error) {
-    console.error("Error adding treatment:", error);
-    res
-      .status(500)
-      .send({ error: "Internal server error", details: error.message });
-  }
-});
+// router.post("/:id/tratamento-executado", async (req, res) => {
+//   try {
+//     const patient = await Patient.findById(req.params.id);
+//     if (!patient) {
+//       return res.status(404).send({ message: "Patient not found" });
+//     }
+//     // Assuming tratamentosExecutados is an array in your patient schema
+//     patient.tratamentosExecutados.push(req.body);
+//     await patient.save();
+//     res
+//       .status(201)
+//       .send({ message: "Treatment added successfully", data: patient });
+//   } catch (error) {
+//     console.error("Error adding treatment:", error);
+//     res
+//       .status(500)
+//       .send({ error: "Internal server error", details: error.message });
+//   }
+// });
 
 // Search route - make sure this comes before the '/:id' route
 router.get("/search", async (req, res) => {
