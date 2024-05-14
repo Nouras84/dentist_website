@@ -1,8 +1,71 @@
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
+// import axios from "axios";
+// import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
+
+// function InformacoesGerais() {
+//   const { patientInfo, setPatientInfo } = usePatientInfo();
+
+//   // Check patientId when component mounts
+//   useEffect(() => {
+//     if (!patientInfo.patientId) {
+//       console.log("No patientId found, please ensure it's being set correctly");
+//       // Optionally, redirect or disable form
+//     } else {
+//       console.log("Using patientId:", patientInfo.patientId);
+//       // If you need to load patient data:
+//       // loadPatientData(patientInfo.patientId);
+//     }
+//   }, [patientInfo.patientId]); // Ensure dependency is correct
+
+//   const handleChange = (event) => {
+//     const { name, value, type, checked } = event.target;
+//     const keys = name.split(".");
+
+//     const updateState = (prevState, keys, value) => {
+//       const key = keys[0];
+//       if (keys.length === 1) {
+//         return { ...prevState, [key]: value };
+//       }
+//       return {
+//         ...prevState,
+//         [key]: updateState(prevState[key], keys.slice(1), value),
+//       };
+//     };
+
+//     setPatientInfo((prevState) =>
+//       updateState(prevState, keys, type === "checkbox" ? checked : value)
+//     );
+//   };
+
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
+//     console.log("Submitting data for patientId:", patientInfo.patientId);
+
+//     if (!patientInfo.patientId) {
+//       alert("No Patient ID provided. Please ensure it is set correctly.");
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.patch(
+//         `http://localhost:5005/patients/${patientInfo.patientId}/general-info`,
+//         patientInfo.informacoesGerais // Only send the 'informacoesGerais' part of the state
+//       );
+//       alert("Informações gerais atualizadas com sucesso!");
+//       console.log("Response Data:", response.data);
+//     } catch (error) {
+//       console.error("Failed to update general information", error);
+//       alert("Falha ao atualizar as informações gerais!");
+//     }
+//   };
+
+import React, { useEffect, useCallback } from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
+import { useParams } from "react-router-dom";
 
 function InformacoesGerais() {
+  const { patientId } = useParams();
   const { patientInfo, setPatientInfo } = usePatientInfo();
 
   // Check patientId when component mounts
@@ -16,6 +79,107 @@ function InformacoesGerais() {
       // loadPatientData(patientInfo.patientId);
     }
   }, [patientInfo.patientId]); // Ensure dependency is correct
+
+  const saveData = useCallback(
+    async (data) => {
+      try {
+        await axios.patch(
+          `http://localhost:5005/patients/${patientId}/general-info`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Data saved successfully");
+      } catch (error) {
+        console.error("Failed to save data", error);
+      }
+    },
+    [patientId]
+  );
+
+  const autosaveForm = useCallback(() => {
+    console.log("Autosaving data...");
+    const relevantInfo = {
+      tratamentoMedico: patientInfo.informacoesGerais?.tratamentoMedico,
+      tratamentoMedicoDetails:
+        patientInfo.informacoesGerais?.tratamentoMedicoDetails,
+      alergiaMedicamentosa: patientInfo.informacoesGerais?.alergiaMedicamentosa,
+      alergiaMedicamentosaDetails:
+        patientInfo.informacoesGerais?.alergiaMedicamentosaDetails,
+      consideraNervoso: patientInfo.informacoesGerais?.consideraNervoso,
+      alergiaOutros: patientInfo.informacoesGerais?.alergiaOutros,
+      alergiaOutrosDetails: patientInfo.informacoesGerais?.alergiaOutrosDetails,
+      consideraAnsioso: patientInfo.informacoesGerais?.consideraAnsioso,
+      hospitalizadoCirurgia:
+        patientInfo.informacoesGerais?.hospitalizadoCirurgia,
+      hospitalizadoCirurgiaDetails:
+        patientInfo.informacoesGerais?.hospitalizadoCirurgiaDetails,
+      vomitaFrequentemente: patientInfo.informacoesGerais?.vomitaFrequentemente,
+      gravida: patientInfo.informacoesGerais?.gravida,
+      gravidaDetails: patientInfo.informacoesGerais?.gravidaDetails,
+      amamentando: patientInfo.informacoesGerais?.amamentando,
+      faltaArCansaco: patientInfo.informacoesGerais?.faltaArCansaco,
+      faltaArCansacoDetails:
+        patientInfo.informacoesGerais?.faltaArCansacoDetails,
+      doresPeito: patientInfo.informacoesGerais?.doresPeito,
+      alteracaoPressao: patientInfo.informacoesGerais?.alteracaoPressao,
+      historicoInfarto: patientInfo.informacoesGerais?.historicoInfarto,
+      historicoInfartoDetails:
+        patientInfo.informacoesGerais?.historicoInfartoDetails,
+      historicoAVC: patientInfo.informacoesGerais?.historicoAVC,
+      historicoAVCDetails: patientInfo.informacoesGerais?.historicoAVCDetails,
+      historicoAsma: patientInfo.informacoesGerais?.historicoAsma,
+      historicoAsmaDetails: patientInfo.informacoesGerais?.historicoAsmaDetails,
+      historicoDiabetes: patientInfo.informacoesGerais?.historicoDiabetes,
+      historicoDiabetesDetails:
+        patientInfo.informacoesGerais?.historicoDiabetesDetails,
+      tuberculose: patientInfo.informacoesGerais?.tuberculose,
+      tuberculoseDetails: patientInfo.informacoesGerais?.tuberculoseDetails,
+      sedeConstante: patientInfo.informacoesGerais?.sedeConstante,
+      urinaNoite: patientInfo.informacoesGerais?.urinaNoite,
+      alteracaoHormonal: patientInfo.informacoesGerais?.alteracaoHormonal,
+      alteracaoHormonalDetails:
+        patientInfo.informacoesGerais?.alteracaoHormonalDetails,
+      desmaioDistrimia: patientInfo.informacoesGerais?.desmaioDistrimia,
+      desmaioDistrimiaDetails:
+        patientInfo.informacoesGerais?.desmaioDistrimiaDetails,
+      hipotireoidismoHipertireoidismo:
+        patientInfo.informacoesGerais?.hipotireoidismoHipertireoidismo,
+      hipotireoidismoHipertireoidismoDetails:
+        patientInfo.informacoesGerais?.hipotireoidismoHipertireoidismoDetails,
+      dificuldadeMastigar: patientInfo.informacoesGerais?.dificuldadeMastigar,
+      tpmMenopausa: patientInfo.informacoesGerais?.tpmMenopausa,
+      tpmMenopausaDetails: patientInfo.informacoesGerais?.tpmMenopausaDetails,
+      calculoRenal: patientInfo.informacoesGerais?.calculoRenal,
+      calculoRenalDetails: patientInfo.informacoesGerais?.calculoRenalDetails,
+      reposicaoHormonal: patientInfo.informacoesGerais?.reposicaoHormonal,
+      osteoporose: patientInfo.informacoesGerais?.osteoporose,
+      anemia: patientInfo.informacoesGerais?.anemia,
+      leucemia: patientInfo.informacoesGerais?.leucemia,
+      hemofilia: patientInfo.informacoesGerais?.hemofilia,
+      ingestaoAlcoolica: patientInfo.informacoesGerais?.ingestaoAlcoolica,
+      tabagista: patientInfo.informacoesGerais?.tabagista,
+      gastrite: patientInfo.informacoesGerais?.gastrite,
+      ulceras: patientInfo.informacoesGerais?.ulceras,
+      hepatite: patientInfo.informacoesGerais?.hepatite,
+      sangramentoPosTraumaCirurgia:
+        patientInfo.informacoesGerais?.sangramentoPosTraumaCirurgia,
+      sangramentoPosTraumaCirurgiaDetails:
+        patientInfo.informacoesGerais?.sangramentoPosTraumaCirurgiaDetails,
+      outrasDoencas: patientInfo.informacoesGerais?.outrasDoencas,
+    };
+
+    saveData(relevantInfo);
+  }, [patientInfo.informacoesGerais, saveData]);
+
+  // Effect for autosaving at intervals
+  useEffect(() => {
+    const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
+    return () => clearInterval(autosaveInterval); // Cleanup on unmount
+  }, [autosaveForm]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -46,10 +210,85 @@ function InformacoesGerais() {
       return;
     }
 
+    const relevantInfo = {
+      tratamentoMedico: patientInfo.informacoesGerais?.tratamentoMedico,
+      tratamentoMedicoDetails:
+        patientInfo.informacoesGerais?.tratamentoMedicoDetails,
+      alergiaMedicamentosa: patientInfo.informacoesGerais?.alergiaMedicamentosa,
+      alergiaMedicamentosaDetails:
+        patientInfo.informacoesGerais?.alergiaMedicamentosaDetails,
+      consideraNervoso: patientInfo.informacoesGerais?.consideraNervoso,
+      alergiaOutros: patientInfo.informacoesGerais?.alergiaOutros,
+      alergiaOutrosDetails: patientInfo.informacoesGerais?.alergiaOutrosDetails,
+      consideraAnsioso: patientInfo.informacoesGerais?.consideraAnsioso,
+      hospitalizadoCirurgia:
+        patientInfo.informacoesGerais?.hospitalizadoCirurgia,
+      hospitalizadoCirurgiaDetails:
+        patientInfo.informacoesGerais?.hospitalizadoCirurgiaDetails,
+      vomitaFrequentemente: patientInfo.informacoesGerais?.vomitaFrequentemente,
+      gravida: patientInfo.informacoesGerais?.gravida,
+      gravidaDetails: patientInfo.informacoesGerais?.gravidaDetails,
+      amamentando: patientInfo.informacoesGerais?.amamentando,
+      faltaArCansaco: patientInfo.informacoesGerais?.faltaArCansaco,
+      faltaArCansacoDetails:
+        patientInfo.informacoesGerais?.faltaArCansacoDetails,
+      doresPeito: patientInfo.informacoesGerais?.doresPeito,
+      alteracaoPressao: patientInfo.informacoesGerais?.alteracaoPressao,
+      historicoInfarto: patientInfo.informacoesGerais?.historicoInfarto,
+      historicoInfartoDetails:
+        patientInfo.informacoesGerais?.historicoInfartoDetails,
+      historicoAVC: patientInfo.informacoesGerais?.historicoAVC,
+      historicoAVCDetails: patientInfo.informacoesGerais?.historicoAVCDetails,
+      historicoAsma: patientInfo.informacoesGerais?.historicoAsma,
+      historicoAsmaDetails: patientInfo.informacoesGerais?.historicoAsmaDetails,
+      historicoDiabetes: patientInfo.informacoesGerais?.historicoDiabetes,
+      historicoDiabetesDetails:
+        patientInfo.informacoesGerais?.historicoDiabetesDetails,
+      tuberculose: patientInfo.informacoesGerais?.tuberculose,
+      tuberculoseDetails: patientInfo.informacoesGerais?.tuberculoseDetails,
+      sedeConstante: patientInfo.informacoesGerais?.sedeConstante,
+      urinaNoite: patientInfo.informacoesGerais?.urinaNoite,
+      alteracaoHormonal: patientInfo.informacoesGerais?.alteracaoHormonal,
+      alteracaoHormonalDetails:
+        patientInfo.informacoesGerais?.alteracaoHormonalDetails,
+      desmaioDistrimia: patientInfo.informacoesGerais?.desmaioDistrimia,
+      desmaioDistrimiaDetails:
+        patientInfo.informacoesGerais?.desmaioDistrimiaDetails,
+      hipotireoidismoHipertireoidismo:
+        patientInfo.informacoesGerais?.hipotireoidismoHipertireoidismo,
+      hipotireoidismoHipertireoidismoDetails:
+        patientInfo.informacoesGerais?.hipotireoidismoHipertireoidismoDetails,
+      dificuldadeMastigar: patientInfo.informacoesGerais?.dificuldadeMastigar,
+      tpmMenopausa: patientInfo.informacoesGerais?.tpmMenopausa,
+      tpmMenopausaDetails: patientInfo.informacoesGerais?.tpmMenopausaDetails,
+      calculoRenal: patientInfo.informacoesGerais?.calculoRenal,
+      calculoRenalDetails: patientInfo.informacoesGerais?.calculoRenalDetails,
+      reposicaoHormonal: patientInfo.informacoesGerais?.reposicaoHormonal,
+      osteoporose: patientInfo.informacoesGerais?.osteoporose,
+      anemia: patientInfo.informacoesGerais?.anemia,
+      leucemia: patientInfo.informacoesGerais?.leucemia,
+      hemofilia: patientInfo.informacoesGerais?.hemofilia,
+      ingestaoAlcoolica: patientInfo.informacoesGerais?.ingestaoAlcoolica,
+      tabagista: patientInfo.informacoesGerais?.tabagista,
+      gastrite: patientInfo.informacoesGerais?.gastrite,
+      ulceras: patientInfo.informacoesGerais?.ulceras,
+      hepatite: patientInfo.informacoesGerais?.hepatite,
+      sangramentoPosTraumaCirurgia:
+        patientInfo.informacoesGerais?.sangramentoPosTraumaCirurgia,
+      sangramentoPosTraumaCirurgiaDetails:
+        patientInfo.informacoesGerais?.sangramentoPosTraumaCirurgiaDetails,
+      outrasDoencas: patientInfo.informacoesGerais?.outrasDoencas,
+    };
+
     try {
       const response = await axios.patch(
         `http://localhost:5005/patients/${patientInfo.patientId}/general-info`,
-        patientInfo.informacoesGerais // Only send the 'informacoesGerais' part of the state
+        relevantInfo,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       alert("Informações gerais atualizadas com sucesso!");
       console.log("Response Data:", response.data);
@@ -60,7 +299,7 @@ function InformacoesGerais() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="informacoes-gerais-form" onSubmit={handleSubmit}>
       <div>
         <label>Está sob tratamento médico?</label>
         <div>
