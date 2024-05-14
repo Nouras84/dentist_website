@@ -44,7 +44,7 @@ const patientSchema = new mongoose.Schema({
   },
   nome: String,
   dataConsulta: Date,
-  // idade: Number,
+
   cpf: String,
   dataNascimento: Date,
   genero: String,

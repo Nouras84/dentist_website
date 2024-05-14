@@ -1,113 +1,3 @@
-// import React, { useEffect, useCallback } from "react";
-// import axios from "axios";
-
-// import { usePatientInfo } from "../../../context/PatientContext";
-// import { useNavigate, useParams } from "react-router-dom";
-
-// import "./styles.css";
-
-// function FormularioDoPaciente() {
-//   const navigate = useNavigate();
-//   const { patientId } = useParams();
-//   const { patientInfo, setPatientInfo } = usePatientInfo();
-
-//   // Define saveData using useCallback to prevent function redefinition on each render
-//   const saveData = useCallback(
-//     async (data) => {
-//       const formData = new FormData();
-//       Object.keys(data).forEach((key) => {
-//         if (typeof data[key] === "object" && data[key] !== null) {
-//           Object.keys(data[key]).forEach((subKey) => {
-//             formData.append(`${key}.${subKey}`, data[key][subKey]);
-//           });
-//         } else {
-//           formData.append(key, data[key]);
-//         }
-//       });
-
-//       if (data.profilePhoto) {
-//         formData.append("profilePhoto", data.profilePhoto);
-//       }
-
-//       try {
-//         await axios.patch(
-//           `http://localhost:5005/patients/${patientId}/update-patient`,
-//           formData,
-//           { headers: { "Content-Type": "multipart/form-data" } }
-//         );
-//         console.log("Data saved successfully");
-//       } catch (error) {
-//         console.error("Failed to save data", error);
-//       }
-//     },
-//     [patientId]
-//   );
-
-//   // Autosave function defined with useCallback to utilize memoized version
-//   const autosaveForm = useCallback(() => {
-//     console.log("Autosaving data...");
-//     saveData(patientInfo);
-//   }, [patientInfo, saveData]);
-
-//   // Effect for autosaving at intervals
-//   useEffect(() => {
-//     const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
-//     return () => clearInterval(autosaveInterval); // Cleanup on unmount
-//   }, [autosaveForm]);
-
-//   // useEffect(() => {
-//   //   if (!patientId) {
-//   //     const createPatient = async () => {
-//   //       try {
-//   //         const response = await axios.post(
-//   //           "http://localhost:5005/patients/create-empty-patient"
-//   //         );
-//   //         navigate(`/add-patient/${response.data.patientId}`);
-//   //       } catch (error) {
-//   //         console.error("Error creating empty patient record:", error);
-//   //         alert("Failed to initialize patient record.");
-//   //       }
-//   //     };
-//   //     createPatient();
-//   //   }
-//   // }, [navigate, patientId]);
-
-//   const handleChange = (event) => {
-//     const { name, value } = event.target;
-//     const keys = name.split(".");
-//     if (keys.length > 1) {
-//       // Handle nested objects such as "endereco.rua"
-//       setPatientInfo((prevState) => ({
-//         ...prevState,
-//         [keys[0]]: {
-//           ...prevState[keys[0]],
-//           [keys[1]]: value,
-//         },
-//       }));
-//     } else {
-//       // Handle top-level properties like "nome"
-//       setPatientInfo((prevState) => ({
-//         ...prevState,
-//         [name]: value,
-//       }));
-//     }
-//   };
-
-//   const handleFileChange = (event) => {
-//     if (event.target.files.length > 0) {
-//       const file = event.target.files[0];
-//       setPatientInfo((prevState) => ({
-//         ...prevState,
-//         profilePhoto: file,
-//       }));
-//     }
-//   };
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     autosaveForm(); // Trigger autosave on submit
-//   };
-
 import React, { useEffect, useCallback } from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext";
@@ -118,43 +8,11 @@ function FormularioDoPaciente() {
   const { patientId } = useParams();
   const { patientInfo, setPatientInfo } = usePatientInfo();
 
-  // Define saveData using useCallback to prevent function redefinition on each render
-  // const saveData = useCallback(
-  //   async (data) => {
-  //     const formData = new FormData();
-  //     Object.keys(data).forEach((key) => {
-  //       if (typeof data[key] === "object" && data[key] !== null) {
-  //         Object.keys(data[key]).forEach((subKey) => {
-  //           formData.append(`${key}.${subKey}`, data[key][subKey]);
-  //         });
-  //       } else {
-  //         formData.append(key, data[key]);
-  //       }
-  //     });
-
-  //     if (data.profilePhoto) {
-  //       formData.append("profilePhoto", data.profilePhoto);
-  //     }
-
-  //     try {
-  //       await axios.patch(
-  //         `http://localhost:5005/patients/${patientId}/update-patient`,
-  //         formData,
-  //         { headers: { "Content-Type": "multipart/form-data" } }
-  //       );
-  //       console.log("Data saved successfully");
-  //     } catch (error) {
-  //       console.error("Failed to save data", error);
-  //     }
-  //   },
-  //   [patientId]
-  // );
-
   const saveData = useCallback(
     async (data) => {
       const formData = new FormData();
       const relevantFields = [
-        "profilePhoto", // Assuming the file itself is handled separately
+        // "profilePhoto", // Assuming the file itself is handled separately
         "nome",
         "dataConsulta",
 
@@ -202,11 +60,6 @@ function FormularioDoPaciente() {
     [patientId]
   );
 
-  // Autosave function defined with useCallback to utilize memoized version
-  // const autosaveForm = useCallback(() => {
-  //   console.log("Autosaving data...");
-  //   saveData(patientInfo);
-  // }, [patientInfo, saveData]);
   const autosaveForm = useCallback(() => {
     console.log("Autosaving data...");
     const relevantInfo = {
@@ -276,10 +129,21 @@ function FormularioDoPaciente() {
     }
   };
 
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   autosaveForm(); // Trigger autosave on submit
+  // };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    // Check if the name field is empty
+    if (!patientInfo.nome || patientInfo.nome.trim() === "") {
+      alert("The name field is required.");
+      return; // Stop the form submission
+    }
     autosaveForm(); // Trigger autosave on submit
   };
+
   return (
     <form onSubmit={handleSubmit} className="patient-form">
       <fieldset>
@@ -287,10 +151,10 @@ function FormularioDoPaciente() {
 
         <div>
           <label>Carregar imagem do paciente:</label>
-          <input type="file" onChange={handleFileChange} />
+          <input type="file" name="profilePhoto" onChange={handleFileChange} />
         </div>
         <div>
-          <label>Nome:</label>
+          <label>Nome*:</label>
           <input
             type="text"
             name="nome"
