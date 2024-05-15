@@ -62,21 +62,21 @@ router.patch("/:id/general-info", async (req, res) => {
   }
 });
 
-router.patch("/:id/procedimento", async (req, res) => {
-  console.log("Received data for procedures:", req.body);
-  try {
-    const patient = await Patient.findById(req.params.id);
-    if (!patient) {
-      return res.status(404).send("Patient not found");
-    }
-    patient.procedimentos.push(req.body.procedimentos[0]); // Make sure you are pushing the right object structure
-    await patient.save();
-    res.status(200).send(patient);
-  } catch (error) {
-    console.error("Error updating procedures:", error);
-    res.status(400).send(error);
-  }
-});
+// router.patch("/:id/procedimento", async (req, res) => {
+//   console.log("Received data for procedures:", req.body);
+//   try {
+//     const patient = await Patient.findById(req.params.id);
+//     if (!patient) {
+//       return res.status(404).send("Patient not found");
+//     }
+//     patient.procedimentos.push(req.body.procedimentos[0]); // Make sure you are pushing the right object structure
+//     await patient.save();
+//     res.status(200).send(patient);
+//   } catch (error) {
+//     console.error("Error updating procedures:", error);
+//     res.status(400).send(error);
+//   }
+// });
 
 // Correct use of uploadProfile middleware for routes needing single file upload
 router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
@@ -183,19 +183,88 @@ router.patch("/:id/add-treatment", async (req, res) => {
 });
 
 // PATCH route to update a specific procedure of a patient
-router.patch("/:patientId/procedimento/:procedureIndex", async (req, res) => {
+router.patch("/:id/procedimento", async (req, res) => {
+  console.log(
+    "Received data for procedures:",
+    JSON.stringify(req.body, null, 2)
+  );
   try {
-    const patient = await Patient.findById(req.params.patientId);
-    if (!patient || !patient.procedimentos[req.params.procedureIndex]) {
-      return res.status(404).send("Patient or procedure not found");
+    const patient = await Patient.findById(req.params.id);
+    if (!patient) {
+      return res.status(404).send("Patient not found");
     }
-    patient.procedimentos.set(req.params.procedureIndex, req.body);
+
+    const newProcedures = req.body.procedimentos;
+
+    // Merge new procedures with existing ones
+    newProcedures.forEach((newProc) => {
+      const existingIndex = patient.procedimentos.findIndex(
+        (proc) => proc.dente === newProc.dente
+      );
+      if (existingIndex !== -1) {
+        // Update existing procedure
+        patient.procedimentos[existingIndex] = newProc;
+      } else {
+        // Add new procedure
+        patient.procedimentos.push(newProc);
+      }
+    });
+
     await patient.save();
+    console.log(
+      "Updated patient data:",
+      JSON.stringify(patient.procedimentos, null, 2)
+    );
     res.status(200).send(patient);
   } catch (error) {
+    console.error("Error updating procedures:", error);
     res.status(400).send(error);
   }
 });
+
+// router.patch("/:id/procedimento", async (req, res) => {
+//   console.log(
+//     "Received data for procedures:",
+//     JSON.stringify(req.body, null, 2)
+//   );
+//   try {
+//     const patient = await Patient.findById(req.params.id);
+//     if (!patient) {
+//       return res.status(404).send("Patient not found");
+//     }
+
+//     const newProcedures = req.body.procedimentos;
+
+//     // Append each new procedure to the patient's procedimentos array
+//     newProcedures.forEach((newProc) => {
+//       patient.procedimentos.push(newProc);
+//     });
+
+//     await patient.save();
+//     console.log(
+//       "Updated patient data:",
+//       JSON.stringify(patient.procedimentos, null, 2)
+//     );
+//     res.status(200).send(patient);
+//   } catch (error) {
+//     console.error("Error updating procedures:", error);
+//     res.status(400).send(error);
+//   }
+// });
+
+// router.patch("/:patientId/procedimento/:procedureIndex", async (req, res) => {
+//   try {
+//     const patient = await Patient.findById(req.params.patientId);
+//     if (!patient || !patient.procedimentos[req.params.procedureIndex]) {
+//       return res.status(404).send("Patient or procedure not found");
+//     }
+//     patient.procedimentos.set(req.params.procedureIndex, req.body);
+//     await patient.save();
+//     res.status(200).send(patient);
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// });
 
 // // PATCH route to update existing photographs for a patient
 // router.patch("/:id/photographs", uploadPhotographs, async (req, res) => {

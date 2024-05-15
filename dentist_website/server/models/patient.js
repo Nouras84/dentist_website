@@ -10,26 +10,49 @@ const treatmentSchema = new mongoose.Schema({
 });
 
 // Schema for documenting details about each side of a tooth
-const sideDetailsSchema = new mongoose.Schema({
-  side: {
-    type: String,
-    enum: ["V", "M", "D", "L", "P", "O"], // Enum to ensure data integrity for tooth sides
-    required: true,
+const sideDetailsSchema = new mongoose.Schema(
+  {
+    side: {
+      type: String,
+      enum: ["V", "M", "D", "L", "P", "O"],
+      required: true,
+    },
   },
-  situacao: String, // Condition or status of this side
-  data: Date, // Date when the procedure or observation was made
-});
+  { _id: false }
+);
+
+// const sideDetailsSchema = new mongoose.Schema({
+//   side: {
+//     type: String,
+//     enum: ["V", "M", "D", "L", "P", "O"], // Enum to ensure data integrity for tooth sides
+//     required: true,
+//   },
+//   situacao: String, // Condition or status of this side
+//   data: Date, // Date when the procedure or observation was made
+// });
 
 // Schema for procedures including multiple sides and details for each
 const procedureSchema = new mongoose.Schema({
   dente: {
-    type: Number, // Tooth number based on dental numbering system
+    type: Number,
     required: true,
   },
-  sides: [sideDetailsSchema], // Allows multiple sides per tooth
+  sides: [sideDetailsSchema], // Only the side information
+  situacao: String, // Condition or status of the tooth
+  data: Date, // Date of the procedure
   procedimento: String, // Description of the procedure
   operation: String,
 });
+
+// const procedureSchema = new mongoose.Schema({
+//   dente: {
+//     type: Number, // Tooth number based on dental numbering system
+//     required: true,
+//   },
+//   sides: [sideDetailsSchema], // Allows multiple sides per tooth
+//   procedimento: String, // Description of the procedure
+//   operation: String,
+// });
 
 // New sub-schema for fotografias
 const photoSchema = new mongoose.Schema({
