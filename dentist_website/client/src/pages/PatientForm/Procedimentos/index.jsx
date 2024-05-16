@@ -43,6 +43,8 @@
 //     data: "",
 //   });
 //   const [lastSavedProcedures, setLastSavedProcedures] = useState([]);
+//   const [isEditMode, setIsEditMode] = useState(false);
+//   const [editIndex, setEditIndex] = useState(null);
 
 //   const initialRender = useRef(true);
 
@@ -54,6 +56,7 @@
 //     setSelectedTooth(Number(tooth));
 //     setSelectedSides([]);
 //     setIsSideModalOpen(true);
+//     setIsEditMode(false); // Reset edit mode for new entries
 //   };
 
 //   const handleSideSelect = (side) => {
@@ -88,22 +91,16 @@
 //       dente: Number(selectedTooth),
 //       sides: selectedSides.map((side) => ({
 //         side: side.toString(),
-//         // situacao: procedureData.situacao,
-//         // data: procedureData.data ? new Date(procedureData.data) : null,
 //       })),
-//       situacao: procedureData.situacao, // Include situacao at the top level
-//       data: procedureData.data ? new Date(procedureData.data) : null, // Include data at the top level
+//       situacao: procedureData.situacao,
+//       data: procedureData.data ? new Date(procedureData.data) : null,
 //       procedimento: procedureData.procedimento,
 //       operation: procedureData.operation,
 //     };
 
-//     const existingIndex = patientInfo.procedimentos.findIndex(
-//       (proc) => proc.dente === newProcedure.dente
-//     );
-
-//     if (existingIndex !== -1) {
+//     if (isEditMode && editIndex !== null) {
 //       console.log("Updating existing procedure...");
-//       updateProcedure(existingIndex, newProcedure);
+//       updateProcedure(editIndex, newProcedure);
 //     } else {
 //       console.log(
 //         "Prepared Procedure to Add",
@@ -112,20 +109,22 @@
 //       addProcedure(newProcedure);
 //     }
 
+//     setIsEditMode(false); // Reset edit mode
 //     setIsFormModalOpen(false);
 //   };
-
 //   const handleEdit = (index) => {
 //     const proc = patientInfo.procedimentos[index];
 //     setSelectedTooth(proc.dente);
-//     setSelectedSides(proc.sides.map((side) => side.side));
+//     setSelectedSides([]); // Reset selectedSides to allow new selection
 //     setProcedureData({
 //       procedimento: proc.procedimento,
 //       operation: proc.operation,
 //       situacao: proc.situacao,
 //       data: proc.data ? new Date(proc.data).toISOString().split("T")[0] : "",
 //     });
-//     setIsFormModalOpen(true);
+//     setEditIndex(index);
+//     setIsEditMode(true);
+//     setIsSideModalOpen(true); // Open the sides modal first
 //   };
 
 //   const saveData = useCallback(
@@ -321,7 +320,8 @@ const sideNames = {
 };
 
 function DentalChart() {
-  const { patientInfo, addProcedure, updateProcedure } = usePatientInfo();
+  const { patientInfo, addProcedure, updateProcedure, setPatientInfo } =
+    usePatientInfo();
   const [selectedTooth, setSelectedTooth] = useState(null);
   const [selectedSides, setSelectedSides] = useState([]);
   const [isSideModalOpen, setIsSideModalOpen] = useState(false);
@@ -365,10 +365,23 @@ function DentalChart() {
     }));
   };
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProcedureData((prev) => {
+  //     const updatedData = { ...prev, [name]: value };
+  //     console.log("Updated Procedure Data:", updatedData);
+  //     return updatedData;
+  //   });
+  // };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProcedureData((prev) => {
-      const updatedData = { ...prev, [name]: value };
+      let updatedData = { ...prev, [name]: value };
+      if (name === "data") {
+        const date = new Date(value);
+        updatedData = { ...prev, [name]: date.toISOString().split("T")[0] };
+      }
       console.log("Updated Procedure Data:", updatedData);
       return updatedData;
     });
@@ -402,6 +415,7 @@ function DentalChart() {
     setIsEditMode(false); // Reset edit mode
     setIsFormModalOpen(false);
   };
+
   const handleEdit = (index) => {
     const proc = patientInfo.procedimentos[index];
     setSelectedTooth(proc.dente);
@@ -415,6 +429,16 @@ function DentalChart() {
     setEditIndex(index);
     setIsEditMode(true);
     setIsSideModalOpen(true); // Open the sides modal first
+  };
+
+  const handleDelete = (index) => {
+    const updatedProcedures = patientInfo.procedimentos.filter(
+      (_, i) => i !== index
+    );
+    setPatientInfo((prev) => ({
+      ...prev,
+      procedimentos: updatedProcedures,
+    }));
   };
 
   const saveData = useCallback(
@@ -505,8 +529,13 @@ function DentalChart() {
             {proc.sides.map((side) => side.side).join(", ")} - Procedure:{" "}
             {proc.procedimento} - Operation: {proc.operation || "N/A"} -
             Situation: {proc.situacao || "N/A"} - Date:{" "}
-            {proc.data ? new Date(proc.data).toLocaleDateString() : "N/A"}
+            {proc.data
+              ? new Date(proc.data).toLocaleDateString("en-GB", {
+                  timeZone: "UTC",
+                })
+              : "N/A"}
             <button onClick={() => handleEdit(index)}>Edit</button>
+            <button onClick={() => handleDelete(index)}>Delete</button>
           </div>
         ))}
       </div>

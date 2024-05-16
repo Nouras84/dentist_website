@@ -194,21 +194,8 @@ router.patch("/:id/procedimento", async (req, res) => {
       return res.status(404).send("Patient not found");
     }
 
-    const newProcedures = req.body.procedimentos;
-
-    // Merge new procedures with existing ones
-    newProcedures.forEach((newProc) => {
-      const existingIndex = patient.procedimentos.findIndex(
-        (proc) => proc.dente === newProc.dente
-      );
-      if (existingIndex !== -1) {
-        // Update existing procedure
-        patient.procedimentos[existingIndex] = newProc;
-      } else {
-        // Add new procedure
-        patient.procedimentos.push(newProc);
-      }
-    });
+    // Replace the existing procedimentos array with the new one
+    patient.procedimentos = req.body.procedimentos;
 
     await patient.save();
     console.log(
@@ -235,9 +222,18 @@ router.patch("/:id/procedimento", async (req, res) => {
 
 //     const newProcedures = req.body.procedimentos;
 
-//     // Append each new procedure to the patient's procedimentos array
+//     // Merge new procedures with existing ones
 //     newProcedures.forEach((newProc) => {
-//       patient.procedimentos.push(newProc);
+//       const existingIndex = patient.procedimentos.findIndex(
+//         (proc) => proc.dente === newProc.dente
+//       );
+//       if (existingIndex !== -1) {
+//         // Update existing procedure
+//         patient.procedimentos[existingIndex] = newProc;
+//       } else {
+//         // Add new procedure
+//         patient.procedimentos.push(newProc);
+//       }
 //     });
 
 //     await patient.save();
@@ -248,20 +244,6 @@ router.patch("/:id/procedimento", async (req, res) => {
 //     res.status(200).send(patient);
 //   } catch (error) {
 //     console.error("Error updating procedures:", error);
-//     res.status(400).send(error);
-//   }
-// });
-
-// router.patch("/:patientId/procedimento/:procedureIndex", async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.patientId);
-//     if (!patient || !patient.procedimentos[req.params.procedureIndex]) {
-//       return res.status(404).send("Patient or procedure not found");
-//     }
-//     patient.procedimentos.set(req.params.procedureIndex, req.body);
-//     await patient.save();
-//     res.status(200).send(patient);
-//   } catch (error) {
 //     res.status(400).send(error);
 //   }
 // });
