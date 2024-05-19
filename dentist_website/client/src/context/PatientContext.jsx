@@ -122,6 +122,7 @@ export const PatientProvider = ({ children }) => {
       formaDePagamento: "",
     },
     tratamentosExecutados: [],
+    savedTreatments: [], // Add this line
     procedimentos: [],
   });
 
@@ -175,6 +176,7 @@ export const PatientProvider = ({ children }) => {
       ...patientInfo.tratamentoExecutadoForm,
       ...treatment,
     };
+
     setPatientInfo((prev) => ({
       ...prev,
       tratamentosExecutados: [...prev.tratamentosExecutados, newTreatment],
@@ -189,6 +191,12 @@ export const PatientProvider = ({ children }) => {
       },
     }));
   };
+  const setSavedTreatments = (treatments) => {
+    setPatientInfo((prev) => ({
+      ...prev,
+      savedTreatments: treatments,
+    }));
+  };
 
   return (
     <PatientContext.Provider
@@ -200,6 +208,7 @@ export const PatientProvider = ({ children }) => {
         updateProcedure,
         addTreatment,
         updatePatientInfo,
+        setSavedTreatments, // Add this line
       }}
     >
       {children}

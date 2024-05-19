@@ -160,22 +160,23 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
 // Example: Check if any other route accidentally handles the same path
 
 // Route for adding or updating treatment data for a patient
-router.patch("/:id/add-treatment", async (req, res) => {
+// Route for adding or updating treatment data for a patient
+router.patch("/:id/tratamento-executado", async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
     if (!patient) {
       return res.status(404).send({ message: "Patient not found" });
     }
 
-    // Assuming req.body contains the treatment data
-    patient.tratamentosExecutados.push(req.body);
+    // Assuming req.body contains the array of treatment data
+    patient.tratamentosExecutados = req.body.tratamentosExecutados;
     await patient.save();
 
     res
       .status(200)
-      .send({ message: "Treatment added successfully", data: patient });
+      .send({ message: "Treatments updated successfully", data: patient });
   } catch (error) {
-    console.error("Error adding treatment:", error);
+    console.error("Error updating treatments:", error);
     res
       .status(500)
       .send({ error: "Internal server error", details: error.message });
