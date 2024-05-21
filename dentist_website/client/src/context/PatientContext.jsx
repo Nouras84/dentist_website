@@ -123,6 +123,7 @@ export const PatientProvider = ({ children }) => {
     },
     tratamentosExecutados: [],
     savedTreatments: [], // Add this line
+    savedFotografias: [], // Ensure this line is included
     procedimentos: [],
   });
 
@@ -198,6 +199,13 @@ export const PatientProvider = ({ children }) => {
     }));
   };
 
+  const setSavedFotografias = (fotografias) => {
+    setPatientInfo((prev) => ({
+      ...prev,
+      savedFotografias: fotografias,
+    }));
+  };
+
   return (
     <PatientContext.Provider
       value={{
@@ -209,6 +217,7 @@ export const PatientProvider = ({ children }) => {
         addTreatment,
         updatePatientInfo,
         setSavedTreatments, // Add this line
+        setSavedFotografias,
       }}
     >
       {children}

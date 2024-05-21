@@ -306,23 +306,85 @@ router.patch("/:id/procedimento", async (req, res) => {
 //   }
 // });
 
-// DELETE route to remove a specific photograph from a patient
-router.delete("/:id/photograph/:filename", async (req, res) => {
+// // DELETE route to remove a specific photograph from a patient
+// router.delete("/:id/photograph/:filename", async (req, res) => {
+//   try {
+//     const patient = await Patient.findById(req.params.id);
+//     if (!patient) {
+//       return res.status(404).send("Patient not found");
+//     }
+
+//     const updatedFotografias = patient.fotografias.filter(
+//       (photo) => !photo.includes(req.params.filename)
+//     );
+//     patient.fotografias = updatedFotografias;
+//     await patient.save();
+
+//     res.status(200).send(patient);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
+
+// PATCH route to update photographs for a patient
+router.patch("/:id/fotografias", uploadPhotographs, async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
     if (!patient) {
       return res.status(404).send("Patient not found");
     }
 
-    const updatedFotografias = patient.fotografias.filter(
-      (photo) => !photo.includes(req.params.filename)
-    );
-    patient.fotografias = updatedFotografias;
+    console.log("Received file name:", req.body.fileName); // Log the file name received
+
+    const photo = {
+      path: req.files[0].path,
+      nome: req.body.fileName, // Store the file name
+      description: req.body.description,
+    };
+
+    patient.fotografias.push(photo);
     await patient.save();
 
-    res.status(200).send(patient);
+    res.status(200).send({
+      message: "Photo added successfully",
+      photo: patient.fotografias[patient.fotografias.length - 1],
+    });
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error adding photo:", error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
+
+// DELETE route to remove a specific photograph from a patient
+router.delete("/:id/fotografias/:photoId", async (req, res) => {
+  try {
+    const { id, photoId } = req.params;
+    const patient = await Patient.findById(id);
+    if (!patient) {
+      return res.status(404).send("Patient not found");
+    }
+
+    // Find the index of the photo to remove
+    const photoIndex = patient.fotografias.findIndex(
+      (photo) => photo._id.toString() === photoId
+    );
+
+    if (photoIndex === -1) {
+      return res.status(404).send("Photo not found");
+    }
+
+    // Remove the photo from the array
+    patient.fotografias.splice(photoIndex, 1);
+    await patient.save();
+
+    res
+      .status(200)
+      .send({ message: "Photo deleted successfully", data: patient });
+  } catch (error) {
+    console.error("Error deleting photo:", error);
+    res
+      .status(500)
+      .send({ message: "Internal server error", details: error.message });
   }
 });
 
@@ -383,27 +445,27 @@ router.get("/check-name", async (req, res) => {
   }
 });
 
-// POST route for uploading photographs under the "fotografias" tab
-router.post("/:id/photographs", uploadPhotographs, async (req, res) => {
-  try {
-    const patient = await Patient.findById(req.params.id);
-    if (!patient) {
-      return res.status(404).send("Patient not found");
-    }
+// // POST route for uploading photographs under the "fotografias" tab
+// router.post("/:id/photographs", uploadPhotographs, async (req, res) => {
+//   try {
+//     const patient = await Patient.findById(req.params.id);
+//     if (!patient) {
+//       return res.status(404).send("Patient not found");
+//     }
 
-    const photographs = req.files.map((file) => ({
-      path: file.path,
-      description: req.body.description, // Ensure this handles multiple descriptions appropriately
-    }));
+//     const photographs = req.files.map((file) => ({
+//       path: file.path,
+//       description: req.body.description, // Ensure this handles multiple descriptions appropriately
+//     }));
 
-    patient.fotografias.push(...photographs);
-    await patient.save();
-    res.status(200).send(patient);
-  } catch (error) {
-    console.error(error);
-    res.status(400).send(error);
-  }
-});
+//     patient.fotografias.push(...photographs);
+//     await patient.save();
+//     res.status(200).send(patient);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).send(error);
+//   }
+// });
 
 // GET route to retrieve all patients
 router.get("/", async (req, res) => {
