@@ -57,8 +57,10 @@ const procedureSchema = new mongoose.Schema({
 // New sub-schema for fotografias
 const photoSchema = new mongoose.Schema({
   path: String,
+  nome: String,
   description: String,
 });
+photoSchema.set("_id", true);
 
 const patientSchema = new mongoose.Schema({
   profilePhoto: {
