@@ -39,7 +39,7 @@ const procedureSchema = new mongoose.Schema({
   },
   sides: [sideDetailsSchema], // Only the side information
   situacao: String, // Condition or status of the tooth
-  data: Date, // Date of the procedure
+  // data: Date, // Date of the procedure
   procedimento: String, // Description of the procedure
   operation: String,
 });
