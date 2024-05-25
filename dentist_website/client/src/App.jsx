@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar/Navbar";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import PatientFormPage from "./pages/PatientForm";
 import PatientList from "./pages/PatientList/PatientList";
+import PatientProfile from "./pages/PatientProfile";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               element={<PatientFormPage />}
             />
             <Route path="/add-patient" element={<PatientFormPage />} />
+            <Route path="/patient-profile/:id" element={<PatientProfile />} />
             {/* Add more routes as needed */}
           </Routes>
         </Router>

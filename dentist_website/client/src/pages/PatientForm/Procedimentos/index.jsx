@@ -9,7 +9,7 @@
 
 // const colorOptions = [
 //   { value: "00B057", label: "CARIE", color: "#00B057" },
-//   { value: "0070BD", label: "TEM CANAL", color: "#0070BD" },
+//   { value: "0070BD", label: "ENDO CONCLUIDA", color: "#0070BD" },
 //   { value: "FF0000", label: "AUSENTE", color: "#FF0000" },
 //   { value: "AEAAAA", label: "EXODONTIA", color: "#AEAAAA" },
 //   { value: "C08F1C", label: "CANAL", color: "#C08F1C" },
@@ -90,8 +90,13 @@
 //     setProcedureData((prev) => {
 //       let updatedData = { ...prev, [name]: value };
 //       if (name === "data") {
-//         const date = new Date(value);
-//         updatedData = { ...prev, [name]: date.toISOString().split("T")[0] };
+//         // Ensure the date is handled correctly without timezone adjustments
+//         const dateParts = value.split("-");
+//         if (dateParts.length === 3) {
+//           const [year, month, day] = dateParts;
+//           const formattedDate = `${year}-${month}-${day}`;
+//           updatedData = { ...prev, [name]: formattedDate };
+//         }
 //       }
 //       console.log("Updated Procedure Data:", updatedData);
 //       return updatedData;
@@ -328,7 +333,7 @@ Modal.setAppElement("#root"); // Ensure this selector matches the ID of your roo
 
 const colorOptions = [
   { value: "00B057", label: "CARIE", color: "#00B057" },
-  { value: "0070BD", label: "TEM CANAL", color: "#0070BD" },
+  { value: "0070BD", label: "ENDO CONCLUIDA", color: "#0070BD" },
   { value: "FF0000", label: "AUSENTE", color: "#FF0000" },
   { value: "AEAAAA", label: "EXODONTIA", color: "#AEAAAA" },
   { value: "C08F1C", label: "CANAL", color: "#C08F1C" },
@@ -380,7 +385,12 @@ function DentalChart() {
   };
 
   const handleSideSelect = (side) => {
-    setSelectedSides((prev) => [...prev, side]);
+    setSelectedSides((prev) => {
+      if (prev.includes(side)) {
+        return prev; // Prevent duplicate sides
+      }
+      return [...prev, side];
+    });
   };
 
   const handleSideSubmit = () => {
@@ -394,15 +404,6 @@ function DentalChart() {
       operation: selectedOption.label,
     }));
   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setProcedureData((prev) => {
-  //     const updatedData = { ...prev, [name]: value };
-  //     console.log("Updated Procedure Data:", updatedData);
-  //     return updatedData;
-  //   });
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -558,21 +559,27 @@ function DentalChart() {
       </div>
       {/* Render saved procedures */}
       <div>
-        {patientInfo.procedimentos.map((proc, index) => (
-          <div key={index}>
-            Tooth {proc.dente} - Sides:{" "}
-            {proc.sides.map((side) => side.side).join(", ")} - Procedure:{" "}
-            {proc.procedimento} - Operation: {proc.operation || "N/A"} -
-            Situation: {proc.situacao || "N/A"} - Date:{" "}
-            {proc.data
-              ? new Date(proc.data).toLocaleDateString("en-GB", {
-                  timeZone: "UTC",
-                })
-              : "N/A"}
-            <button onClick={() => handleEdit(index)}>Edit</button>
-            <button onClick={() => handleDelete(index)}>Delete</button>
-          </div>
-        ))}
+        {patientInfo.procedimentos
+          .slice()
+          .sort((a, b) => new Date(b.data) - new Date(a.data))
+          .map((proc, index) => (
+            <div key={index}>
+              Tooth {proc.dente} - Sides:{" "}
+              {proc.sides
+                .map((side) => sideNames[side.side] || side.side)
+                .join(", ")}{" "}
+              - Procedure: {proc.procedimento} - Operation:{" "}
+              {proc.operation || "N/A"} - Situation: {proc.situacao || "N/A"} -
+              Date:{" "}
+              {proc.data
+                ? new Date(proc.data).toLocaleDateString("en-GB", {
+                    timeZone: "UTC",
+                  })
+                : "N/A"}
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              <button onClick={() => handleDelete(index)}>Delete</button>
+            </div>
+          ))}
       </div>
 
       {/* Submit button */}
