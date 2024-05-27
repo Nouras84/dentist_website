@@ -1,4 +1,4 @@
-// import React, { useEffect, useCallback } from "react";
+// import React, { useCallback, useEffect } from "react";
 // import axios from "axios";
 // import { usePatientInfo } from "../../../context/PatientContext";
 // import { useParams } from "react-router-dom";
@@ -12,10 +12,8 @@
 //     async (data) => {
 //       const formData = new FormData();
 //       const relevantFields = [
-//         // "profilePhoto", // Assuming the file itself is handled separately
 //         "nome",
 //         "dataConsulta",
-
 //         "cpf",
 //         "dataNascimento",
 //         "genero",
@@ -129,11 +127,6 @@
 //     }
 //   };
 
-//   // const handleSubmit = (event) => {
-//   //   event.preventDefault();
-//   //   autosaveForm(); // Trigger autosave on submit
-//   // };
-
 //   const handleSubmit = (event) => {
 //     event.preventDefault();
 //     // Check if the name field is empty
@@ -158,8 +151,7 @@
 //           <input
 //             type="text"
 //             name="nome"
-//             placeholder="
-//             Digite o nome"
+//             placeholder="Digite o nome"
 //             value={patientInfo.nome}
 //             onChange={handleChange}
 //           />
@@ -173,16 +165,6 @@
 //             onChange={handleChange}
 //           />
 //         </div>
-//         {/* <div>
-//           <label>Idade:</label>
-//           <input
-//             type="number"
-//             name="idade"
-//             placeholder="Enter age"
-//             value={patientInfo.idade}
-//             onChange={handleChange}
-//           />
-//         </div> */}
 //         <div>
 //           <label>CPF:</label>
 //           <input
@@ -387,30 +369,6 @@
 //           />
 //         </div>
 //       </fieldset>
-//       {/* <fieldset>
-//         <legend>Preferências do Paciente </legend>
-
-//         <div>
-//           <label>Interesse(s):</label>
-//           <input
-//             type="text"
-//             name="interesse"
-//             placeholder="Enter interests"
-//             value={patientInfo.interesse}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <div>
-//           <label>Musicas:</label>
-//           <input
-//             type="text"
-//             name="musicas"
-//             placeholder="Enter favorite music"
-//             value={patientInfo.musicas}
-//             onChange={handleChange}
-//           />
-//         </div>
-//       </fieldset> */}
 //       <button type="submit">Submit</button>
 //     </form>
 //   );
@@ -789,7 +747,7 @@ function FormularioDoPaciente() {
           />
         </div>
       </fieldset>
-      <button type="submit">Submit</button>
+      {/* <button type="submit">Submit</button> */}
     </form>
   );
 }

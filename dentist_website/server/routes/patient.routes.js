@@ -169,7 +169,11 @@ router.patch("/:id/tratamento-executado", async (req, res) => {
     }
 
     // Assuming req.body contains the array of treatment data
-    patient.tratamentosExecutados = req.body.tratamentosExecutados;
+    const updatedTreatments = req.body.tratamentosExecutados;
+
+    // Replace the existing tratamentosExecutados with the new data
+    patient.tratamentosExecutados = updatedTreatments;
+
     await patient.save();
 
     res

@@ -1,64 +1,3 @@
-// import React, { useEffect } from "react";
-// import axios from "axios";
-// import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
-
-// function InformacoesGerais() {
-//   const { patientInfo, setPatientInfo } = usePatientInfo();
-
-//   // Check patientId when component mounts
-//   useEffect(() => {
-//     if (!patientInfo.patientId) {
-//       console.log("No patientId found, please ensure it's being set correctly");
-//       // Optionally, redirect or disable form
-//     } else {
-//       console.log("Using patientId:", patientInfo.patientId);
-//       // If you need to load patient data:
-//       // loadPatientData(patientInfo.patientId);
-//     }
-//   }, [patientInfo.patientId]); // Ensure dependency is correct
-
-//   const handleChange = (event) => {
-//     const { name, value, type, checked } = event.target;
-//     const keys = name.split(".");
-
-//     const updateState = (prevState, keys, value) => {
-//       const key = keys[0];
-//       if (keys.length === 1) {
-//         return { ...prevState, [key]: value };
-//       }
-//       return {
-//         ...prevState,
-//         [key]: updateState(prevState[key], keys.slice(1), value),
-//       };
-//     };
-
-//     setPatientInfo((prevState) =>
-//       updateState(prevState, keys, type === "checkbox" ? checked : value)
-//     );
-//   };
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-//     console.log("Submitting data for patientId:", patientInfo.patientId);
-
-//     if (!patientInfo.patientId) {
-//       alert("No Patient ID provided. Please ensure it is set correctly.");
-//       return;
-//     }
-
-//     try {
-//       const response = await axios.patch(
-//         `http://localhost:5005/patients/${patientInfo.patientId}/general-info`,
-//         patientInfo.informacoesGerais // Only send the 'informacoesGerais' part of the state
-//       );
-//       alert("Informações gerais atualizadas com sucesso!");
-//       console.log("Response Data:", response.data);
-//     } catch (error) {
-//       console.error("Failed to update general information", error);
-//       alert("Falha ao atualizar as informações gerais!");
-//     }
-//   };
-
 import React, { useEffect, useCallback } from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
@@ -1298,7 +1237,7 @@ function InformacoesGerais() {
       </div>
 
       {/* Continue similarly for all remaining questions, making sure to include the conditional rendering for additional details when "sim" is selected. This ensures users can provide more information where necessary. */}
-      <button type="submit">Submit</button>
+      {/* <button type="submit">Submit</button> */}
     </form>
   );
 }
