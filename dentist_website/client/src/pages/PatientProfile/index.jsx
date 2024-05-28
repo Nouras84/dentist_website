@@ -672,14 +672,6 @@
 //               <p>Procedimento: {proc.procedimento}</p>
 //               <p>Operação: {proc.operation}</p>
 //               <p>Situação: {proc.situacao}</p>
-//               {/* <p>
-//                 Data:{" "}
-//                 {proc.data
-//                   ? new Date(proc.data).toLocaleDateString("pt-BR", {
-//                       timeZone: "UTC",
-//                     })
-//                   : "N/A"}
-//               </p> */}
 //             </div>
 //           ))
 //         ) : (
@@ -709,14 +701,31 @@
 //           <p>Nenhum tratamento registrado.</p>
 //         )}
 //       </div>
+
+//       <div>
+//         <h2>Fotografias</h2>
+//         {patient.fotografias && patient.fotografias.length > 0 ? (
+//           patient.fotografias.map((foto, index) => (
+//             <div key={index}>
+//               <img
+//                 src={`http://localhost:5005/${foto.path}`}
+//                 alt={`Foto ${index + 1}`}
+//               />
+//               <p>Descrição: {foto.description}</p>
+//             </div>
+//           ))
+//         ) : (
+//           <p>Nenhuma fotografia registrada.</p>
+//         )}
+//       </div>
 //     </div>
 //   );
 // }
 
-// export default PatientProfile;
+// export default PatientProfile; (the code work perfectly without edit button)
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./styles.css"; // Ensure the CSS file is correctly linked
 
@@ -732,6 +741,7 @@ function capitalizeFirstLetterOfWords(string) {
 
 function PatientProfile() {
   const { id } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -774,9 +784,16 @@ function PatientProfile() {
     O: "Oclusal",
   };
 
+  const handleEdit = () => {
+    navigate(`/add-patient/${id}`); // Navigate to the patient form page for editing
+  };
+
   return (
     <div>
       <h1>Perfil do Paciente - Informações Detalhadas</h1>
+      <button onClick={handleEdit} className="edit-button">
+        Editar
+      </button>
       {patient.profilePhoto && (
         <div>
           <h2>Foto de Perfil</h2>
