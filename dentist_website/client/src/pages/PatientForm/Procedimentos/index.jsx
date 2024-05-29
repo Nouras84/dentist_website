@@ -4,8 +4,7 @@
 // import Select from "react-select";
 // import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
 
-// // Set the app element for react-modal
-// Modal.setAppElement("#root"); // Ensure this selector matches the ID of your root element
+// Modal.setAppElement("#root");
 
 // const colorOptions = [
 //   { value: "00B057", label: "CARIE", color: "#00B057" },
@@ -55,13 +54,13 @@
 //     setSelectedTooth(Number(tooth));
 //     setSelectedSides([]);
 //     setIsSideModalOpen(true);
-//     setIsEditMode(false); // Reset edit mode for new entries
+//     setIsEditMode(false);
 //   };
 
 //   const handleSideSelect = (side) => {
 //     setSelectedSides((prev) => {
 //       if (prev.includes(side)) {
-//         return prev; // Prevent duplicate sides
+//         return prev;
 //       }
 //       return [...prev, side];
 //     });
@@ -103,33 +102,26 @@
 //     const updatedProcedures = [...patientInfo.procedimentos];
 
 //     if (isEditMode && editIndex !== null) {
-//       console.log("Updating existing procedure...");
 //       updatedProcedures[editIndex] = newProcedure;
 //     } else {
-//       console.log(
-//         "Prepared Procedure to Add",
-//         JSON.stringify(newProcedure, null, 2)
-//       );
 //       updatedProcedures.push(newProcedure);
 //     }
 
-//     // Sort the procedures before saving
 //     updatedProcedures.sort((a, b) => a.dente - b.dente);
 
-//     // Update procedures in context
 //     setPatientInfo((prev) => ({
 //       ...prev,
 //       procedimentos: updatedProcedures,
 //     }));
 
-//     setIsEditMode(false); // Reset edit mode
+//     setIsEditMode(false);
 //     setIsFormModalOpen(false);
 //   };
 
 //   const handleEdit = (index) => {
 //     const proc = patientInfo.procedimentos[index];
 //     setSelectedTooth(proc.dente);
-//     setSelectedSides([]); // Reset selectedSides to allow new selection
+//     setSelectedSides([]);
 //     setProcedureData({
 //       procedimento: proc.procedimento,
 //       operation: proc.operation,
@@ -137,7 +129,7 @@
 //     });
 //     setEditIndex(index);
 //     setIsEditMode(true);
-//     setIsSideModalOpen(true); // Open the sides modal first
+//     setIsSideModalOpen(true);
 //   };
 
 //   const handleDelete = (index) => {
@@ -153,8 +145,7 @@
 //   const saveData = useCallback(
 //     async (data) => {
 //       try {
-//         console.log("Saving data:", data);
-//         const response = await axios.patch(
+//         await axios.patch(
 //           `http://localhost:5005/patients/${patientInfo.patientId}/procedimento`,
 //           { procedimentos: data },
 //           {
@@ -163,7 +154,6 @@
 //             },
 //           }
 //         );
-//         console.log("Data saved successfully", response.data);
 //         setLastSavedProcedures(data);
 //       } catch (error) {
 //         console.error("Failed to save data", error);
@@ -177,7 +167,6 @@
 //       JSON.stringify(lastSavedProcedures) !==
 //       JSON.stringify(patientInfo.procedimentos)
 //     ) {
-//       console.log("Autosaving procedures...");
 //       saveData(patientInfo.procedimentos);
 //     }
 //   }, [patientInfo.procedimentos, lastSavedProcedures, saveData]);
@@ -185,22 +174,13 @@
 //   useEffect(() => {
 //     if (!initialRender.current) {
 //       if (patientInfo.procedimentos.length > 0) {
-//         const autosaveInterval = setInterval(autosaveProcedures, 30000); // Autosave every 30 seconds
-//         return () => clearInterval(autosaveInterval); // Cleanup on unmount
+//         const autosaveInterval = setInterval(autosaveProcedures, 30000);
+//         return () => clearInterval(autosaveInterval);
 //       }
 //     } else {
 //       initialRender.current = false;
 //     }
 //   }, [patientInfo.procedimentos, autosaveProcedures]);
-
-//   const handleFinalSubmit = async () => {
-//     try {
-//       await saveData(patientInfo.procedimentos);
-//       alert("Procedures submitted successfully!");
-//     } catch (error) {
-//       alert("Failed to submit procedures.");
-//     }
-//   };
 
 //   return (
 //     <div>
@@ -248,9 +228,6 @@
 //             </div>
 //           ))}
 //       </div>
-
-//       {/* Submit button */}
-//       <button onClick={handleFinalSubmit}>Submit Procedures</button>
 
 //       {/* Modals for side selection and procedure details */}
 //       <Modal
@@ -306,7 +283,7 @@
 //   );
 // }
 
-// export default DentalChart;
+// export default DentalChart;(this works perfectly without confermation delete)
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
@@ -353,6 +330,8 @@ function DentalChart() {
   const [lastSavedProcedures, setLastSavedProcedures] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(null);
 
   const initialRender = useRef(true);
 
@@ -442,14 +421,20 @@ function DentalChart() {
     setIsSideModalOpen(true);
   };
 
-  const handleDelete = (index) => {
+  const handleDeleteClick = (index) => {
+    setDeleteIndex(index);
+    setShowConfirmationModal(true);
+  };
+
+  const handleDelete = () => {
     const updatedProcedures = patientInfo.procedimentos.filter(
-      (_, i) => i !== index
+      (_, i) => i !== deleteIndex
     );
     setPatientInfo((prev) => ({
       ...prev,
       procedimentos: updatedProcedures,
     }));
+    setShowConfirmationModal(false);
   };
 
   const saveData = useCallback(
@@ -534,7 +519,7 @@ function DentalChart() {
               - Procedure: {proc.procedimento} - Operation:{" "}
               {proc.operation || "N/A"} - Situation: {proc.situacao || "N/A"}
               <button onClick={() => handleEdit(index)}>Edit</button>
-              <button onClick={() => handleDelete(index)}>Delete</button>
+              <button onClick={() => handleDeleteClick(index)}>Delete</button>
             </div>
           ))}
       </div>
@@ -588,6 +573,27 @@ function DentalChart() {
           />
           <button type="submit">Save</button>
         </form>
+      </Modal>
+
+      {/* Confirmation modal for deleting */}
+      <Modal
+        isOpen={showConfirmationModal}
+        onRequestClose={() => setShowConfirmationModal(false)}
+        className="confirmation-modal"
+        overlayClassName="confirmation-modal-overlay"
+      >
+        <div className="modal-content">
+          <p>Tem certeza de que deseja excluir este procedimento?</p>
+          <button className="delete-button" onClick={handleDelete}>
+            Excluir
+          </button>
+          <button
+            className="cancel-button"
+            onClick={() => setShowConfirmationModal(false)}
+          >
+            Cancelar
+          </button>
+        </div>
       </Modal>
     </div>
   );

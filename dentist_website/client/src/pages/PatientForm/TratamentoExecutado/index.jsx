@@ -312,7 +312,7 @@ function TratamentoExecutado() {
   }, [savedTreatments, patientInfo.patientId]);
 
   useEffect(() => {
-    const intervalId = setInterval(autoSave, 30000); // Auto-save every 30 seconds
+    const intervalId = setInterval(autoSave, 10000); // Auto-save every 30 seconds
 
     return () => clearInterval(intervalId); // Clear interval on component unmount
   }, [autoSave]);
