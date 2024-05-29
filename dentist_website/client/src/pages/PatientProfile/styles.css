@@ -1,0 +1,56 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content p {
+  margin-bottom: 1em;
+}
+
+.modal-content .delete-button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  margin-right: 1em;
+}
+
+.modal-content .cancel-button {
+  background: grey;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2em;
+}
+
+.action-buttons .edit-button,
+.action-buttons .delete-button {
+  background: blue;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+
+.action-buttons .delete-button {
+  background: red;
+}
