@@ -1,0 +1,27 @@
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.exit-form-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.exit-form-button:hover {
+  background: #0056b3;
+}
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}

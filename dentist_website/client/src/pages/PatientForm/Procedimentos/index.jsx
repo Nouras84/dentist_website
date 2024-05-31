@@ -4,12 +4,11 @@
 // import Select from "react-select";
 // import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
 
-// // Set the app element for react-modal
-// Modal.setAppElement("#root"); // Ensure this selector matches the ID of your root element
+// Modal.setAppElement("#root");
 
 // const colorOptions = [
 //   { value: "00B057", label: "CARIE", color: "#00B057" },
-//   { value: "0070BD", label: "TEM CANAL", color: "#0070BD" },
+//   { value: "0070BD", label: "ENDO CONCLUIDA", color: "#0070BD" },
 //   { value: "FF0000", label: "AUSENTE", color: "#FF0000" },
 //   { value: "AEAAAA", label: "EXODONTIA", color: "#AEAAAA" },
 //   { value: "C08F1C", label: "CANAL", color: "#C08F1C" },
@@ -31,7 +30,7 @@
 // };
 
 // function DentalChart() {
-//   const { patientInfo, addProcedure, updateProcedure } = usePatientInfo();
+//   const { patientInfo, setPatientInfo } = usePatientInfo();
 //   const [selectedTooth, setSelectedTooth] = useState(null);
 //   const [selectedSides, setSelectedSides] = useState([]);
 //   const [isSideModalOpen, setIsSideModalOpen] = useState(false);
@@ -40,7 +39,6 @@
 //     procedimento: "",
 //     operation: "",
 //     situacao: "",
-//     data: "",
 //   });
 //   const [lastSavedProcedures, setLastSavedProcedures] = useState([]);
 //   const [isEditMode, setIsEditMode] = useState(false);
@@ -56,11 +54,16 @@
 //     setSelectedTooth(Number(tooth));
 //     setSelectedSides([]);
 //     setIsSideModalOpen(true);
-//     setIsEditMode(false); // Reset edit mode for new entries
+//     setIsEditMode(false);
 //   };
 
 //   const handleSideSelect = (side) => {
-//     setSelectedSides((prev) => [...prev, side]);
+//     setSelectedSides((prev) => {
+//       if (prev.includes(side)) {
+//         return prev;
+//       }
+//       return [...prev, side];
+//     });
 //   };
 
 //   const handleSideSubmit = () => {
@@ -77,11 +80,10 @@
 
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
-//     setProcedureData((prev) => {
-//       const updatedData = { ...prev, [name]: value };
-//       console.log("Updated Procedure Data:", updatedData);
-//       return updatedData;
-//     });
+//     setProcedureData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
 //   };
 
 //   const handleSubmit = (e) => {
@@ -93,45 +95,57 @@
 //         side: side.toString(),
 //       })),
 //       situacao: procedureData.situacao,
-//       data: procedureData.data ? new Date(procedureData.data) : null,
 //       procedimento: procedureData.procedimento,
 //       operation: procedureData.operation,
 //     };
 
+//     const updatedProcedures = [...patientInfo.procedimentos];
+
 //     if (isEditMode && editIndex !== null) {
-//       console.log("Updating existing procedure...");
-//       updateProcedure(editIndex, newProcedure);
+//       updatedProcedures[editIndex] = newProcedure;
 //     } else {
-//       console.log(
-//         "Prepared Procedure to Add",
-//         JSON.stringify(newProcedure, null, 2)
-//       );
-//       addProcedure(newProcedure);
+//       updatedProcedures.push(newProcedure);
 //     }
 
-//     setIsEditMode(false); // Reset edit mode
+//     updatedProcedures.sort((a, b) => a.dente - b.dente);
+
+//     setPatientInfo((prev) => ({
+//       ...prev,
+//       procedimentos: updatedProcedures,
+//     }));
+
+//     setIsEditMode(false);
 //     setIsFormModalOpen(false);
 //   };
+
 //   const handleEdit = (index) => {
 //     const proc = patientInfo.procedimentos[index];
 //     setSelectedTooth(proc.dente);
-//     setSelectedSides([]); // Reset selectedSides to allow new selection
+//     setSelectedSides([]);
 //     setProcedureData({
 //       procedimento: proc.procedimento,
 //       operation: proc.operation,
 //       situacao: proc.situacao,
-//       data: proc.data ? new Date(proc.data).toISOString().split("T")[0] : "",
 //     });
 //     setEditIndex(index);
 //     setIsEditMode(true);
-//     setIsSideModalOpen(true); // Open the sides modal first
+//     setIsSideModalOpen(true);
+//   };
+
+//   const handleDelete = (index) => {
+//     const updatedProcedures = patientInfo.procedimentos.filter(
+//       (_, i) => i !== index
+//     );
+//     setPatientInfo((prev) => ({
+//       ...prev,
+//       procedimentos: updatedProcedures,
+//     }));
 //   };
 
 //   const saveData = useCallback(
 //     async (data) => {
 //       try {
-//         console.log("Saving data:", data);
-//         const response = await axios.patch(
+//         await axios.patch(
 //           `http://localhost:5005/patients/${patientInfo.patientId}/procedimento`,
 //           { procedimentos: data },
 //           {
@@ -140,7 +154,6 @@
 //             },
 //           }
 //         );
-//         console.log("Data saved successfully", response.data);
 //         setLastSavedProcedures(data);
 //       } catch (error) {
 //         console.error("Failed to save data", error);
@@ -154,7 +167,6 @@
 //       JSON.stringify(lastSavedProcedures) !==
 //       JSON.stringify(patientInfo.procedimentos)
 //     ) {
-//       console.log("Autosaving procedures...");
 //       saveData(patientInfo.procedimentos);
 //     }
 //   }, [patientInfo.procedimentos, lastSavedProcedures, saveData]);
@@ -162,22 +174,13 @@
 //   useEffect(() => {
 //     if (!initialRender.current) {
 //       if (patientInfo.procedimentos.length > 0) {
-//         const autosaveInterval = setInterval(autosaveProcedures, 30000); // Autosave every 30 seconds
-//         return () => clearInterval(autosaveInterval); // Cleanup on unmount
+//         const autosaveInterval = setInterval(autosaveProcedures, 30000);
+//         return () => clearInterval(autosaveInterval);
 //       }
 //     } else {
 //       initialRender.current = false;
 //     }
 //   }, [patientInfo.procedimentos, autosaveProcedures]);
-
-//   const handleFinalSubmit = async () => {
-//     try {
-//       await saveData(patientInfo.procedimentos);
-//       alert("Procedures submitted successfully!");
-//     } catch (error) {
-//       alert("Failed to submit procedures.");
-//     }
-//   };
 
 //   return (
 //     <div>
@@ -209,20 +212,22 @@
 //       </div>
 //       {/* Render saved procedures */}
 //       <div>
-//         {patientInfo.procedimentos.map((proc, index) => (
-//           <div key={index}>
-//             Tooth {proc.dente} - Sides:{" "}
-//             {proc.sides.map((side) => side.side).join(", ")} - Procedure:{" "}
-//             {proc.procedimento} - Operation: {proc.operation || "N/A"} -
-//             Situation: {proc.situacao || "N/A"} - Date:{" "}
-//             {proc.data ? new Date(proc.data).toLocaleDateString() : "N/A"}
-//             <button onClick={() => handleEdit(index)}>Edit</button>
-//           </div>
-//         ))}
+//         {patientInfo.procedimentos
+//           .slice()
+//           .sort((a, b) => a.dente - b.dente)
+//           .map((proc, index) => (
+//             <div key={index}>
+//               Tooth {proc.dente} - Sides:{" "}
+//               {proc.sides
+//                 .map((side) => sideNames[side.side] || side.side)
+//                 .join(", ")}{" "}
+//               - Procedure: {proc.procedimento} - Operation:{" "}
+//               {proc.operation || "N/A"} - Situation: {proc.situacao || "N/A"}
+//               <button onClick={() => handleEdit(index)}>Edit</button>
+//               <button onClick={() => handleDelete(index)}>Delete</button>
+//             </div>
+//           ))}
 //       </div>
-
-//       {/* Submit button */}
-//       <button onClick={handleFinalSubmit}>Submit Procedures</button>
 
 //       {/* Modals for side selection and procedure details */}
 //       <Modal
@@ -271,13 +276,6 @@
 //             value={procedureData.situacao}
 //             onChange={handleChange}
 //           />
-//           <label>Data:</label>
-//           <input
-//             type="date"
-//             name="data"
-//             value={procedureData.data}
-//             onChange={handleChange}
-//           />
 //           <button type="submit">Save</button>
 //         </form>
 //       </Modal>
@@ -285,7 +283,7 @@
 //   );
 // }
 
-// export default DentalChart;
+// export default DentalChart;(this works perfectly without confermation delete)
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
@@ -293,12 +291,11 @@ import Modal from "react-modal";
 import Select from "react-select";
 import { usePatientInfo } from "../../../context/PatientContext"; // Ensure the path is correct
 
-// Set the app element for react-modal
-Modal.setAppElement("#root"); // Ensure this selector matches the ID of your root element
+Modal.setAppElement("#root");
 
 const colorOptions = [
   { value: "00B057", label: "CARIE", color: "#00B057" },
-  { value: "0070BD", label: "TEM CANAL", color: "#0070BD" },
+  { value: "0070BD", label: "ENDO CONCLUIDA", color: "#0070BD" },
   { value: "FF0000", label: "AUSENTE", color: "#FF0000" },
   { value: "AEAAAA", label: "EXODONTIA", color: "#AEAAAA" },
   { value: "C08F1C", label: "CANAL", color: "#C08F1C" },
@@ -320,8 +317,7 @@ const sideNames = {
 };
 
 function DentalChart() {
-  const { patientInfo, addProcedure, updateProcedure, setPatientInfo } =
-    usePatientInfo();
+  const { patientInfo, setPatientInfo } = usePatientInfo();
   const [selectedTooth, setSelectedTooth] = useState(null);
   const [selectedSides, setSelectedSides] = useState([]);
   const [isSideModalOpen, setIsSideModalOpen] = useState(false);
@@ -330,11 +326,12 @@ function DentalChart() {
     procedimento: "",
     operation: "",
     situacao: "",
-    data: "",
   });
   const [lastSavedProcedures, setLastSavedProcedures] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(null);
 
   const initialRender = useRef(true);
 
@@ -346,11 +343,16 @@ function DentalChart() {
     setSelectedTooth(Number(tooth));
     setSelectedSides([]);
     setIsSideModalOpen(true);
-    setIsEditMode(false); // Reset edit mode for new entries
+    setIsEditMode(false);
   };
 
   const handleSideSelect = (side) => {
-    setSelectedSides((prev) => [...prev, side]);
+    setSelectedSides((prev) => {
+      if (prev.includes(side)) {
+        return prev;
+      }
+      return [...prev, side];
+    });
   };
 
   const handleSideSubmit = () => {
@@ -365,26 +367,12 @@ function DentalChart() {
     }));
   };
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setProcedureData((prev) => {
-  //     const updatedData = { ...prev, [name]: value };
-  //     console.log("Updated Procedure Data:", updatedData);
-  //     return updatedData;
-  //   });
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProcedureData((prev) => {
-      let updatedData = { ...prev, [name]: value };
-      if (name === "data") {
-        const date = new Date(value);
-        updatedData = { ...prev, [name]: date.toISOString().split("T")[0] };
-      }
-      console.log("Updated Procedure Data:", updatedData);
-      return updatedData;
-    });
+    setProcedureData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -396,56 +384,63 @@ function DentalChart() {
         side: side.toString(),
       })),
       situacao: procedureData.situacao,
-      data: procedureData.data ? new Date(procedureData.data) : null,
       procedimento: procedureData.procedimento,
       operation: procedureData.operation,
     };
 
+    const updatedProcedures = [...patientInfo.procedimentos];
+
     if (isEditMode && editIndex !== null) {
-      console.log("Updating existing procedure...");
-      updateProcedure(editIndex, newProcedure);
+      updatedProcedures[editIndex] = newProcedure;
     } else {
-      console.log(
-        "Prepared Procedure to Add",
-        JSON.stringify(newProcedure, null, 2)
-      );
-      addProcedure(newProcedure);
+      updatedProcedures.push(newProcedure);
     }
 
-    setIsEditMode(false); // Reset edit mode
+    updatedProcedures.sort((a, b) => a.dente - b.dente);
+
+    setPatientInfo((prev) => ({
+      ...prev,
+      procedimentos: updatedProcedures,
+    }));
+
+    setIsEditMode(false);
     setIsFormModalOpen(false);
   };
 
   const handleEdit = (index) => {
     const proc = patientInfo.procedimentos[index];
     setSelectedTooth(proc.dente);
-    setSelectedSides([]); // Reset selectedSides to allow new selection
+    setSelectedSides([]);
     setProcedureData({
       procedimento: proc.procedimento,
       operation: proc.operation,
       situacao: proc.situacao,
-      data: proc.data ? new Date(proc.data).toISOString().split("T")[0] : "",
     });
     setEditIndex(index);
     setIsEditMode(true);
-    setIsSideModalOpen(true); // Open the sides modal first
+    setIsSideModalOpen(true);
   };
 
-  const handleDelete = (index) => {
+  const handleDeleteClick = (index) => {
+    setDeleteIndex(index);
+    setShowConfirmationModal(true);
+  };
+
+  const handleDelete = () => {
     const updatedProcedures = patientInfo.procedimentos.filter(
-      (_, i) => i !== index
+      (_, i) => i !== deleteIndex
     );
     setPatientInfo((prev) => ({
       ...prev,
       procedimentos: updatedProcedures,
     }));
+    setShowConfirmationModal(false);
   };
 
   const saveData = useCallback(
     async (data) => {
       try {
-        console.log("Saving data:", data);
-        const response = await axios.patch(
+        await axios.patch(
           `http://localhost:5005/patients/${patientInfo.patientId}/procedimento`,
           { procedimentos: data },
           {
@@ -454,7 +449,6 @@ function DentalChart() {
             },
           }
         );
-        console.log("Data saved successfully", response.data);
         setLastSavedProcedures(data);
       } catch (error) {
         console.error("Failed to save data", error);
@@ -468,7 +462,6 @@ function DentalChart() {
       JSON.stringify(lastSavedProcedures) !==
       JSON.stringify(patientInfo.procedimentos)
     ) {
-      console.log("Autosaving procedures...");
       saveData(patientInfo.procedimentos);
     }
   }, [patientInfo.procedimentos, lastSavedProcedures, saveData]);
@@ -476,22 +469,13 @@ function DentalChart() {
   useEffect(() => {
     if (!initialRender.current) {
       if (patientInfo.procedimentos.length > 0) {
-        const autosaveInterval = setInterval(autosaveProcedures, 30000); // Autosave every 30 seconds
-        return () => clearInterval(autosaveInterval); // Cleanup on unmount
+        const autosaveInterval = setInterval(autosaveProcedures, 30000);
+        return () => clearInterval(autosaveInterval);
       }
     } else {
       initialRender.current = false;
     }
   }, [patientInfo.procedimentos, autosaveProcedures]);
-
-  const handleFinalSubmit = async () => {
-    try {
-      await saveData(patientInfo.procedimentos);
-      alert("Procedures submitted successfully!");
-    } catch (error) {
-      alert("Failed to submit procedures.");
-    }
-  };
 
   return (
     <div>
@@ -523,25 +507,22 @@ function DentalChart() {
       </div>
       {/* Render saved procedures */}
       <div>
-        {patientInfo.procedimentos.map((proc, index) => (
-          <div key={index}>
-            Tooth {proc.dente} - Sides:{" "}
-            {proc.sides.map((side) => side.side).join(", ")} - Procedure:{" "}
-            {proc.procedimento} - Operation: {proc.operation || "N/A"} -
-            Situation: {proc.situacao || "N/A"} - Date:{" "}
-            {proc.data
-              ? new Date(proc.data).toLocaleDateString("en-GB", {
-                  timeZone: "UTC",
-                })
-              : "N/A"}
-            <button onClick={() => handleEdit(index)}>Edit</button>
-            <button onClick={() => handleDelete(index)}>Delete</button>
-          </div>
-        ))}
+        {patientInfo.procedimentos
+          .slice()
+          .sort((a, b) => a.dente - b.dente)
+          .map((proc, index) => (
+            <div key={index}>
+              Tooth {proc.dente} - Sides:{" "}
+              {proc.sides
+                .map((side) => sideNames[side.side] || side.side)
+                .join(", ")}{" "}
+              - Procedure: {proc.procedimento} - Operation:{" "}
+              {proc.operation || "N/A"} - Situation: {proc.situacao || "N/A"}
+              <button onClick={() => handleEdit(index)}>Edit</button>
+              <button onClick={() => handleDeleteClick(index)}>Delete</button>
+            </div>
+          ))}
       </div>
-
-      {/* Submit button */}
-      <button onClick={handleFinalSubmit}>Submit Procedures</button>
 
       {/* Modals for side selection and procedure details */}
       <Modal
@@ -590,15 +571,29 @@ function DentalChart() {
             value={procedureData.situacao}
             onChange={handleChange}
           />
-          <label>Data:</label>
-          <input
-            type="date"
-            name="data"
-            value={procedureData.data}
-            onChange={handleChange}
-          />
           <button type="submit">Save</button>
         </form>
+      </Modal>
+
+      {/* Confirmation modal for deleting */}
+      <Modal
+        isOpen={showConfirmationModal}
+        onRequestClose={() => setShowConfirmationModal(false)}
+        className="confirmation-modal"
+        overlayClassName="confirmation-modal-overlay"
+      >
+        <div className="modal-content">
+          <p>Tem certeza de que deseja excluir este procedimento?</p>
+          <button className="delete-button" onClick={handleDelete}>
+            Excluir
+          </button>
+          <button
+            className="cancel-button"
+            onClick={() => setShowConfirmationModal(false)}
+          >
+            Cancelar
+          </button>
+        </div>
       </Modal>
     </div>
   );

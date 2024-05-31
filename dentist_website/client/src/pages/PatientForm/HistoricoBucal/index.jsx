@@ -1,11 +1,70 @@
-// import React from "react";
+// import React, { useEffect, useCallback } from "react";
 // import axios from "axios";
 // import { usePatientInfo } from "../../../context/PatientContext"; // Adjust the path as necessary
-
+// import { useParams } from "react-router-dom";
 // import "./styles.css"; // Ensure you have proper CSS for styling the form
 
 // function HistoricoBucal() {
+//   const { patientId } = useParams();
 //   const { patientInfo, setPatientInfo } = usePatientInfo(); // Use the context to manage state
+
+//   const saveData = useCallback(
+//     async (data) => {
+//       try {
+//         await axios.patch(
+//           `http://localhost:5005/patients/${patientId}/dental-history`,
+//           data,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         );
+//         console.log("Data saved successfully");
+//       } catch (error) {
+//         console.error("Failed to save data", error);
+//       }
+//     },
+//     [patientId]
+//   );
+
+//   const autosaveForm = useCallback(() => {
+//     console.log("Autosaving data...");
+//     const relevantInfo = {
+//       frequenciaDentista: patientInfo.historicoBucal?.frequenciaDentista,
+//       mastigaLados: patientInfo.historicoBucal?.mastigaLados,
+//       escovaDentesFrequencia:
+//         patientInfo.historicoBucal?.escovaDentesFrequencia,
+//       rangeDentes: patientInfo.historicoBucal?.rangeDentes,
+//       apreensivoTratamento: patientInfo.historicoBucal?.apreensivoTratamento,
+//       gengivaSangra: patientInfo.historicoBucal?.gengivaSangra,
+//       problemaTratamentoOdontologico:
+//         patientInfo.historicoBucal?.problemaTratamentoOdontologico,
+//       problemaTratamentoOdontologicoDetails:
+//         patientInfo.historicoBucal?.problemaTratamentoOdontologicoDetails,
+//       usaFioDental: patientInfo.historicoBucal?.usaFioDental,
+//       dentesSensiveis: patientInfo.historicoBucal?.dentesSensiveis,
+//       metodoAuxiliar: patientInfo.historicoBucal?.metodoAuxiliar,
+//       mordeLinguaLabioBochecha:
+//         patientInfo.historicoBucal?.mordeLinguaLabioBochecha,
+//       dorMastigar: patientInfo.historicoBucal?.dorMastigar,
+//       usaProteseImplante: patientInfo.historicoBucal?.usaProteseImplante,
+//       usaProteseImplanteDetails:
+//         patientInfo.historicoBucal?.usaProteseImplanteDetails,
+//       feridaBoca: patientInfo.historicoBucal?.feridaBoca,
+//       feridaBocaDetails: patientInfo.historicoBucal?.feridaBocaDetails,
+//       dentesAfetamSaude: patientInfo.historicoBucal?.dentesAfetamSaude,
+//       respiraPelaBoca: patientInfo.historicoBucal?.respiraPelaBoca,
+//     };
+
+//     saveData(relevantInfo);
+//   }, [patientInfo.historicoBucal, saveData]);
+
+//   // Effect for autosaving at intervals
+//   useEffect(() => {
+//     const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
+//     return () => clearInterval(autosaveInterval); // Cleanup on unmount
+//   }, [autosaveForm]);
 
 //   const handleChange = (event) => {
 //     const { name, value, type, checked } = event.target;
@@ -21,7 +80,6 @@
 //   const handleSubmit = async (event) => {
 //     event.preventDefault();
 //     console.log("Submitting Histórico Bucal", patientInfo.historicoBucal);
-//     const patientId = patientInfo.patientId;
 
 //     if (!patientId) {
 //       alert(
@@ -30,10 +88,37 @@
 //       return;
 //     }
 
+//     const relevantInfo = {
+//       frequenciaDentista: patientInfo.historicoBucal?.frequenciaDentista,
+//       mastigaLados: patientInfo.historicoBucal?.mastigaLados,
+//       escovaDentesFrequencia:
+//         patientInfo.historicoBucal?.escovaDentesFrequencia,
+//       rangeDentes: patientInfo.historicoBucal?.rangeDentes,
+//       apreensivoTratamento: patientInfo.historicoBucal?.apreensivoTratamento,
+//       gengivaSangra: patientInfo.historicoBucal?.gengivaSangra,
+//       problemaTratamentoOdontologico:
+//         patientInfo.historicoBucal?.problemaTratamentoOdontologico,
+//       problemaTratamentoOdontologicoDetails:
+//         patientInfo.historicoBucal?.problemaTratamentoOdontologicoDetails,
+//       usaFioDental: patientInfo.historicoBucal?.usaFioDental,
+//       dentesSensiveis: patientInfo.historicoBucal?.dentesSensiveis,
+//       metodoAuxiliar: patientInfo.historicoBucal?.metodoAuxiliar,
+//       mordeLinguaLabioBochecha:
+//         patientInfo.historicoBucal?.mordeLinguaLabioBochecha,
+//       dorMastigar: patientInfo.historicoBucal?.dorMastigar,
+//       usaProteseImplante: patientInfo.historicoBucal?.usaProteseImplante,
+//       usaProteseImplanteDetails:
+//         patientInfo.historicoBucal?.usaProteseImplanteDetails,
+//       feridaBoca: patientInfo.historicoBucal?.feridaBoca,
+//       feridaBocaDetails: patientInfo.historicoBucal?.feridaBocaDetails,
+//       dentesAfetamSaude: patientInfo.historicoBucal?.dentesAfetamSaude,
+//       respiraPelaBoca: patientInfo.historicoBucal?.respiraPelaBoca,
+//     };
+
 //     try {
 //       const response = await axios.patch(
 //         `http://localhost:5005/patients/${patientId}/dental-history`,
-//         patientInfo.historicoBucal,
+//         relevantInfo,
 //         {
 //           headers: {
 //             "Content-Type": "application/json",
@@ -43,7 +128,6 @@
 //       console.log("Response Data:", response.data);
 
 //       alert("Histórico bucal atualizado com sucesso!");
-//       console.log("Response Data:", response.data);
 //     } catch (error) {
 //       console.error("Failed to update dental history", error);
 //       alert("Falha ao atualizar o histórico bucal!");
@@ -589,65 +673,8 @@ function HistoricoBucal() {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log("Submitting Histórico Bucal", patientInfo.historicoBucal);
-
-    if (!patientId) {
-      alert(
-        "ID do paciente não encontrado. Por favor, selecione um paciente válido."
-      );
-      return;
-    }
-
-    const relevantInfo = {
-      frequenciaDentista: patientInfo.historicoBucal?.frequenciaDentista,
-      mastigaLados: patientInfo.historicoBucal?.mastigaLados,
-      escovaDentesFrequencia:
-        patientInfo.historicoBucal?.escovaDentesFrequencia,
-      rangeDentes: patientInfo.historicoBucal?.rangeDentes,
-      apreensivoTratamento: patientInfo.historicoBucal?.apreensivoTratamento,
-      gengivaSangra: patientInfo.historicoBucal?.gengivaSangra,
-      problemaTratamentoOdontologico:
-        patientInfo.historicoBucal?.problemaTratamentoOdontologico,
-      problemaTratamentoOdontologicoDetails:
-        patientInfo.historicoBucal?.problemaTratamentoOdontologicoDetails,
-      usaFioDental: patientInfo.historicoBucal?.usaFioDental,
-      dentesSensiveis: patientInfo.historicoBucal?.dentesSensiveis,
-      metodoAuxiliar: patientInfo.historicoBucal?.metodoAuxiliar,
-      mordeLinguaLabioBochecha:
-        patientInfo.historicoBucal?.mordeLinguaLabioBochecha,
-      dorMastigar: patientInfo.historicoBucal?.dorMastigar,
-      usaProteseImplante: patientInfo.historicoBucal?.usaProteseImplante,
-      usaProteseImplanteDetails:
-        patientInfo.historicoBucal?.usaProteseImplanteDetails,
-      feridaBoca: patientInfo.historicoBucal?.feridaBoca,
-      feridaBocaDetails: patientInfo.historicoBucal?.feridaBocaDetails,
-      dentesAfetamSaude: patientInfo.historicoBucal?.dentesAfetamSaude,
-      respiraPelaBoca: patientInfo.historicoBucal?.respiraPelaBoca,
-    };
-
-    try {
-      const response = await axios.patch(
-        `http://localhost:5005/patients/${patientId}/dental-history`,
-        relevantInfo,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Response Data:", response.data);
-
-      alert("Histórico bucal atualizado com sucesso!");
-    } catch (error) {
-      console.error("Failed to update dental history", error);
-      alert("Falha ao atualizar o histórico bucal!");
-    }
-  };
-
   return (
-    <form className="historico-bucal-form" onSubmit={handleSubmit}>
+    <form className="historico-bucal-form">
       <div>
         <label>Frequência que vai no dentista:</label>
         <select
@@ -1098,8 +1125,6 @@ function HistoricoBucal() {
           <option value="as vezes">Às vezes</option>
         </select>
       </div>
-
-      <button type="submit">Submit</button>
     </form>
   );
 }

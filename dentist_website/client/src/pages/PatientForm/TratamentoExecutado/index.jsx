@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect, useCallback } from "react";
 // import axios from "axios";
 // import { usePatientInfo } from "../../../context/PatientContext";
 // import "./styles.css"; // Assuming you've set up some basic styles
@@ -10,7 +10,10 @@
 
 //   useEffect(() => {
 //     // Load saved treatments from context when component mounts
-//     setLocalSavedTreatments(patientInfo.savedTreatments);
+//     const sortedTreatments = patientInfo.savedTreatments
+//       .slice()
+//       .sort((a, b) => new Date(b.data) - new Date(a.data));
+//     setLocalSavedTreatments(sortedTreatments);
 //   }, [patientInfo.savedTreatments]);
 
 //   const [isEditMode, setIsEditMode] = useState(false);
@@ -94,6 +97,29 @@
 //     }
 //   };
 
+//   const autoSave = useCallback(async () => {
+//     const patientId = patientInfo.patientId;
+
+//     try {
+//       await axios.patch(
+//         `http://localhost:5005/patients/${patientId}/tratamento-executado`,
+//         { tratamentosExecutados: savedTreatments }
+//       );
+//       console.log("Tratamentos auto-salvos com sucesso!");
+//     } catch (error) {
+//       console.error(
+//         "Failed to auto-save treatments:",
+//         error.response ? error.response.data : error
+//       );
+//     }
+//   }, [savedTreatments, patientInfo.patientId]);
+
+//   useEffect(() => {
+//     const intervalId = setInterval(autoSave, 40000); // Auto-save every 30 seconds
+
+//     return () => clearInterval(intervalId); // Clear interval on component unmount
+//   }, [autoSave]);
+
 //   return (
 //     <div>
 //       <form onSubmit={handleSave} className="tratamento-executado-form">
@@ -161,18 +187,21 @@
 //       </form>
 
 //       <div className="saved-treatments">
-//         {savedTreatments.map((treatment, index) => (
-//           <div key={index} className="treatment-entry">
-//             <p>
-//               Data: {treatment.data} - Procedimento: {treatment.procedimento} -
-//               Dentista: {treatment.dentista} - Valor: {treatment.valor} - Nota
-//               Fiscal: {treatment.notaFiscal} - Forma de Pagamento:{" "}
-//               {treatment.formaDePagamento}
-//             </p>
-//             <button onClick={() => handleEdit(index)}>Editar</button>
-//             <button onClick={() => handleDelete(index)}>Excluir</button>
-//           </div>
-//         ))}
+//         {savedTreatments
+//           .slice()
+//           .sort((a, b) => new Date(b.data) - new Date(a.data))
+//           .map((treatment, index) => (
+//             <div key={index} className="treatment-entry">
+//               <p>
+//                 Data: {treatment.data} - Procedimento: {treatment.procedimento}{" "}
+//                 - Dentista: {treatment.dentista} - Valor: {treatment.valor} -
+//                 Nota Fiscal: {treatment.notaFiscal} - Forma de Pagamento:{" "}
+//                 {treatment.formaDePagamento}
+//               </p>
+//               <button onClick={() => handleEdit(index)}>Editar</button>
+//               <button onClick={() => handleDelete(index)}>Excluir</button>
+//             </div>
+//           ))}
 //       </div>
 
 //       <button onClick={handleFinalSubmit} className="final-submit">
@@ -182,7 +211,7 @@
 //   );
 // }
 
-// export default TratamentoExecutado;
+// export default TratamentoExecutado;(this works perfectly but has a button)
 
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
@@ -196,7 +225,10 @@ function TratamentoExecutado() {
 
   useEffect(() => {
     // Load saved treatments from context when component mounts
-    setLocalSavedTreatments(patientInfo.savedTreatments);
+    const sortedTreatments = patientInfo.savedTreatments
+      .slice()
+      .sort((a, b) => new Date(b.data) - new Date(a.data));
+    setLocalSavedTreatments(sortedTreatments);
   }, [patientInfo.savedTreatments]);
 
   const [isEditMode, setIsEditMode] = useState(false);
@@ -262,24 +294,6 @@ function TratamentoExecutado() {
     setSavedTreatments(updatedTreatments);
   };
 
-  const handleFinalSubmit = async () => {
-    const patientId = patientInfo.patientId;
-
-    try {
-      await axios.patch(
-        `http://localhost:5005/patients/${patientId}/tratamento-executado`,
-        { tratamentosExecutados: savedTreatments }
-      );
-      alert("Tratamentos enviados com sucesso!");
-    } catch (error) {
-      console.error(
-        "Failed to submit treatments:",
-        error.response ? error.response.data : error
-      );
-      alert("Falha ao enviar os tratamentos!");
-    }
-  };
-
   const autoSave = useCallback(async () => {
     const patientId = patientInfo.patientId;
 
@@ -298,7 +312,7 @@ function TratamentoExecutado() {
   }, [savedTreatments, patientInfo.patientId]);
 
   useEffect(() => {
-    const intervalId = setInterval(autoSave, 30000); // Auto-save every 30 seconds
+    const intervalId = setInterval(autoSave, 10000); // Auto-save every 30 seconds
 
     return () => clearInterval(intervalId); // Clear interval on component unmount
   }, [autoSave]);
@@ -370,23 +384,22 @@ function TratamentoExecutado() {
       </form>
 
       <div className="saved-treatments">
-        {savedTreatments.map((treatment, index) => (
-          <div key={index} className="treatment-entry">
-            <p>
-              Data: {treatment.data} - Procedimento: {treatment.procedimento} -
-              Dentista: {treatment.dentista} - Valor: {treatment.valor} - Nota
-              Fiscal: {treatment.notaFiscal} - Forma de Pagamento:{" "}
-              {treatment.formaDePagamento}
-            </p>
-            <button onClick={() => handleEdit(index)}>Editar</button>
-            <button onClick={() => handleDelete(index)}>Excluir</button>
-          </div>
-        ))}
+        {savedTreatments
+          .slice()
+          .sort((a, b) => new Date(b.data) - new Date(a.data))
+          .map((treatment, index) => (
+            <div key={index} className="treatment-entry">
+              <p>
+                Data: {treatment.data} - Procedimento: {treatment.procedimento}{" "}
+                - Dentista: {treatment.dentista} - Valor: {treatment.valor} -
+                Nota Fiscal: {treatment.notaFiscal} - Forma de Pagamento:{" "}
+                {treatment.formaDePagamento}
+              </p>
+              <button onClick={() => handleEdit(index)}>Editar</button>
+              <button onClick={() => handleDelete(index)}>Excluir</button>
+            </div>
+          ))}
       </div>
-
-      <button onClick={handleFinalSubmit} className="final-submit">
-        Enviar Tratamentos
-      </button>
     </div>
   );
 }

@@ -34,6 +34,8 @@ const session = require("express-session"); // Import express-session
 
 const app = express();
 
+app.use("/uploads", express.static("uploads"));
+
 // Configure express-session
 app.use(
   session({
