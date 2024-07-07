@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user"); // Adjust the path as necessary
 const router = express.Router();
+const Patients = require("../models/patient");
 
 // router.post("/login", async (req, res) => {
 //   const { username, password } = req.body;
@@ -45,6 +46,21 @@ router.get("/logout", (req, res) => {
     }
     res.send("Logged out successfully");
   });
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const patient = await Patients.findById(id);
+
+    console.log("founded patient:", patient);
+
+    res.status(200).json(patient);
+  } catch (error) {
+    console.error("error:", error);
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
 });
 
 module.exports = router;

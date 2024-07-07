@@ -1462,6 +1462,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./styles.css"; // Ensure the CSS file is correctly linked
+import { usePatientInfo } from "../../context/PatientContext";
 
 function capitalizeFirstLetter(string) {
   if (!string) return "";
@@ -1480,12 +1481,14 @@ function PatientProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false); // State for modal
+  const { patientInfo } = usePatientInfo();
 
+  console.log("after exit patientInfo state:", patientInfo);
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5005/patients/${id}`
+          `http://localhost:5005/patients/${id || patientInfo._id}`
         );
         setPatient(response.data);
         setIsLoading(false);

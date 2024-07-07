@@ -83,6 +83,9 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
+  console.log("updateData:", updateData);
+  console.log("param id:", id);
+
   try {
     // If the nome is in the update data, check for existing patients with the same nome
     if (updateData.nome) {

@@ -1,218 +1,3 @@
-// import React, { useState, useEffect, useCallback } from "react";
-// import axios from "axios";
-// import { usePatientInfo } from "../../../context/PatientContext";
-// import "./styles.css"; // Assuming you've set up some basic styles
-
-// function TratamentoExecutado() {
-//   const { patientInfo, updatePatientInfo, addTreatment, setSavedTreatments } =
-//     usePatientInfo();
-//   const [savedTreatments, setLocalSavedTreatments] = useState([]);
-
-//   useEffect(() => {
-//     // Load saved treatments from context when component mounts
-//     const sortedTreatments = patientInfo.savedTreatments
-//       .slice()
-//       .sort((a, b) => new Date(b.data) - new Date(a.data));
-//     setLocalSavedTreatments(sortedTreatments);
-//   }, [patientInfo.savedTreatments]);
-
-//   const [isEditMode, setIsEditMode] = useState(false);
-//   const [editIndex, setEditIndex] = useState(null);
-
-//   const handleChange = (event) => {
-//     const { name, value } = event.target;
-//     updatePatientInfo({
-//       tratamentoExecutadoForm: {
-//         ...patientInfo.tratamentoExecutadoForm,
-//         [name]: value,
-//       },
-//     });
-//   };
-
-//   const handleSave = (event) => {
-//     event.preventDefault();
-//     let updatedTreatments;
-//     if (isEditMode && editIndex !== null) {
-//       updatedTreatments = [...savedTreatments];
-//       updatedTreatments[editIndex] = { ...patientInfo.tratamentoExecutadoForm };
-//       setLocalSavedTreatments(updatedTreatments);
-//       setIsEditMode(false);
-//       setEditIndex(null);
-//     } else {
-//       updatedTreatments = [
-//         ...savedTreatments,
-//         { ...patientInfo.tratamentoExecutadoForm },
-//       ];
-//       setLocalSavedTreatments(updatedTreatments);
-//     }
-
-//     // Add treatment to context
-//     addTreatment({ ...patientInfo.tratamentoExecutadoForm });
-
-//     // Save to context
-//     setSavedTreatments(updatedTreatments);
-
-//     // Reset the form after saving
-//     updatePatientInfo({
-//       tratamentoExecutadoForm: {
-//         data: "",
-//         procedimento: "",
-//         dentista: "",
-//         valor: "",
-//         notaFiscal: "",
-//         formaDePagamento: "",
-//       },
-//     });
-//   };
-
-//   const handleEdit = (index) => {
-//     updatePatientInfo({
-//       tratamentoExecutadoForm: { ...savedTreatments[index] },
-//     });
-//     setIsEditMode(true);
-//     setEditIndex(index);
-//   };
-
-//   const handleDelete = (index) => {
-//     const updatedTreatments = savedTreatments.filter((_, i) => i !== index);
-//     setLocalSavedTreatments(updatedTreatments);
-//     setSavedTreatments(updatedTreatments);
-//   };
-
-//   const handleFinalSubmit = async () => {
-//     const patientId = patientInfo.patientId;
-
-//     try {
-//       await axios.patch(
-//         `http://localhost:5005/patients/${patientId}/tratamento-executado`,
-//         { tratamentosExecutados: savedTreatments }
-//       );
-//       alert("Tratamentos enviados com sucesso!");
-//     } catch (error) {
-//       console.error(
-//         "Failed to submit treatments:",
-//         error.response ? error.response.data : error
-//       );
-//       alert("Falha ao enviar os tratamentos!");
-//     }
-//   };
-
-//   const autoSave = useCallback(async () => {
-//     const patientId = patientInfo.patientId;
-
-//     try {
-//       await axios.patch(
-//         `http://localhost:5005/patients/${patientId}/tratamento-executado`,
-//         { tratamentosExecutados: savedTreatments }
-//       );
-//       console.log("Tratamentos auto-salvos com sucesso!");
-//     } catch (error) {
-//       console.error(
-//         "Failed to auto-save treatments:",
-//         error.response ? error.response.data : error
-//       );
-//     }
-//   }, [savedTreatments, patientInfo.patientId]);
-
-//   useEffect(() => {
-//     const intervalId = setInterval(autoSave, 40000); // Auto-save every 30 seconds
-
-//     return () => clearInterval(intervalId); // Clear interval on component unmount
-//   }, [autoSave]);
-
-//   return (
-//     <div>
-//       <form onSubmit={handleSave} className="tratamento-executado-form">
-//         <h2>Tratamento Executado</h2>
-//         <label htmlFor="data">Data:</label>
-//         <input
-//           type="date"
-//           id="data"
-//           name="data"
-//           value={patientInfo.tratamentoExecutadoForm.data}
-//           onChange={handleChange}
-//         />
-
-//         <label htmlFor="procedimento">Procedimento:</label>
-//         <input
-//           type="text"
-//           id="procedimento"
-//           name="procedimento"
-//           placeholder="Descrição do procedimento"
-//           value={patientInfo.tratamentoExecutadoForm.procedimento}
-//           onChange={handleChange}
-//         />
-
-//         <label htmlFor="dentista">Dentista:</label>
-//         <input
-//           type="text"
-//           id="dentista"
-//           name="dentista"
-//           placeholder="Nome do dentista"
-//           value={patientInfo.tratamentoExecutadoForm.dentista}
-//           onChange={handleChange}
-//         />
-
-//         <label htmlFor="valor">Valor:</label>
-//         <input
-//           type="text"
-//           id="valor"
-//           name="valor"
-//           placeholder="Valor cobrado"
-//           value={patientInfo.tratamentoExecutadoForm.valor}
-//           onChange={handleChange}
-//         />
-
-//         <label htmlFor="notaFiscal">Nota Fiscal:</label>
-//         <input
-//           type="text"
-//           id="notaFiscal"
-//           name="notaFiscal"
-//           placeholder="Número da nota fiscal"
-//           value={patientInfo.tratamentoExecutadoForm.notaFiscal}
-//           onChange={handleChange}
-//         />
-
-//         <label htmlFor="formaDePagamento">Forma de Pagamento:</label>
-//         <input
-//           type="text"
-//           id="formaDePagamento"
-//           name="formaDePagamento"
-//           placeholder="Forma de pagamento"
-//           value={patientInfo.tratamentoExecutadoForm.formaDePagamento}
-//           onChange={handleChange}
-//         />
-
-//         <button type="submit">{isEditMode ? "Atualizar" : "Salvar"}</button>
-//       </form>
-
-//       <div className="saved-treatments">
-//         {savedTreatments
-//           .slice()
-//           .sort((a, b) => new Date(b.data) - new Date(a.data))
-//           .map((treatment, index) => (
-//             <div key={index} className="treatment-entry">
-//               <p>
-//                 Data: {treatment.data} - Procedimento: {treatment.procedimento}{" "}
-//                 - Dentista: {treatment.dentista} - Valor: {treatment.valor} -
-//                 Nota Fiscal: {treatment.notaFiscal} - Forma de Pagamento:{" "}
-//                 {treatment.formaDePagamento}
-//               </p>
-//               <button onClick={() => handleEdit(index)}>Editar</button>
-//               <button onClick={() => handleDelete(index)}>Excluir</button>
-//             </div>
-//           ))}
-//       </div>
-
-//       <button onClick={handleFinalSubmit} className="final-submit">
-//         Enviar Tratamentos
-//       </button>
-//     </div>
-//   );
-// }
-
-// export default TratamentoExecutado;(this works perfectly but has a button)
-
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { usePatientInfo } from "../../../context/PatientContext";
@@ -225,11 +10,11 @@ function TratamentoExecutado() {
 
   useEffect(() => {
     // Load saved treatments from context when component mounts
-    const sortedTreatments = patientInfo.savedTreatments
-      .slice()
-      .sort((a, b) => new Date(b.data) - new Date(a.data));
+    const sortedTreatments = patientInfo?.savedTreatments
+      ?.slice()
+      ?.sort((a, b) => new Date(b.data) - new Date(a.data));
     setLocalSavedTreatments(sortedTreatments);
-  }, [patientInfo.savedTreatments]);
+  }, [patientInfo?.savedTreatments]);
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -254,19 +39,21 @@ function TratamentoExecutado() {
       setIsEditMode(false);
       setEditIndex(null);
     } else {
-      updatedTreatments = [
-        ...savedTreatments,
-        { ...patientInfo.tratamentoExecutadoForm },
-      ];
-      setLocalSavedTreatments(updatedTreatments);
+      if (savedTreatments?.length > 0) {
+        updatedTreatments = [
+          ...savedTreatments,
+          { ...patientInfo.tratamentoExecutadoForm },
+        ];
+        setLocalSavedTreatments(updatedTreatments);
+      } else {
+        updatedTreatments = [{ ...patientInfo.tratamentoExecutadoForm }];
+        setLocalSavedTreatments(updatedTreatments);
+      }
     }
-
     // Add treatment to context
     addTreatment({ ...patientInfo.tratamentoExecutadoForm });
-
     // Save to context
     setSavedTreatments(updatedTreatments);
-
     // Reset the form after saving
     updatePatientInfo({
       tratamentoExecutadoForm: {
@@ -299,7 +86,9 @@ function TratamentoExecutado() {
 
     try {
       await axios.patch(
-        `http://localhost:5005/patients/${patientId}/tratamento-executado`,
+        `http://localhost:5005/patients/${
+          patientId || patientInfo._id
+        }/tratamento-executado`,
         { tratamentosExecutados: savedTreatments }
       );
       console.log("Tratamentos auto-salvos com sucesso!");
@@ -311,11 +100,12 @@ function TratamentoExecutado() {
     }
   }, [savedTreatments, patientInfo.patientId]);
 
-  useEffect(() => {
-    const intervalId = setInterval(autoSave, 10000); // Auto-save every 30 seconds
+  // INFO auto save closed for test reasons at tratamento-executado section !
+  // useEffect(() => {
+  //   const intervalId = setInterval(autoSave, 10000); // Auto-save every 30 seconds
 
-    return () => clearInterval(intervalId); // Clear interval on component unmount
-  }, [autoSave]);
+  //   return () => clearInterval(intervalId); // Clear interval on component unmount
+  // }, [autoSave]);
 
   return (
     <div>
@@ -326,7 +116,7 @@ function TratamentoExecutado() {
           type="date"
           id="data"
           name="data"
-          value={patientInfo.tratamentoExecutadoForm.data}
+          value={patientInfo?.tratamentoExecutadoForm?.data}
           onChange={handleChange}
         />
 
@@ -336,7 +126,7 @@ function TratamentoExecutado() {
           id="procedimento"
           name="procedimento"
           placeholder="Descrição do procedimento"
-          value={patientInfo.tratamentoExecutadoForm.procedimento}
+          value={patientInfo?.tratamentoExecutadoForm?.procedimento}
           onChange={handleChange}
         />
 
@@ -346,7 +136,7 @@ function TratamentoExecutado() {
           id="dentista"
           name="dentista"
           placeholder="Nome do dentista"
-          value={patientInfo.tratamentoExecutadoForm.dentista}
+          value={patientInfo?.tratamentoExecutadoForm?.dentista}
           onChange={handleChange}
         />
 
@@ -356,7 +146,7 @@ function TratamentoExecutado() {
           id="valor"
           name="valor"
           placeholder="Valor cobrado"
-          value={patientInfo.tratamentoExecutadoForm.valor}
+          value={patientInfo?.tratamentoExecutadoForm?.valor}
           onChange={handleChange}
         />
 
@@ -366,7 +156,7 @@ function TratamentoExecutado() {
           id="notaFiscal"
           name="notaFiscal"
           placeholder="Número da nota fiscal"
-          value={patientInfo.tratamentoExecutadoForm.notaFiscal}
+          value={patientInfo?.tratamentoExecutadoForm?.notaFiscal}
           onChange={handleChange}
         />
 
@@ -376,7 +166,7 @@ function TratamentoExecutado() {
           id="formaDePagamento"
           name="formaDePagamento"
           placeholder="Forma de pagamento"
-          value={patientInfo.tratamentoExecutadoForm.formaDePagamento}
+          value={patientInfo?.tratamentoExecutadoForm?.formaDePagamento}
           onChange={handleChange}
         />
 
@@ -385,9 +175,9 @@ function TratamentoExecutado() {
 
       <div className="saved-treatments">
         {savedTreatments
-          .slice()
+          ?.slice()
           .sort((a, b) => new Date(b.data) - new Date(a.data))
-          .map((treatment, index) => (
+          ?.map((treatment, index) => (
             <div key={index} className="treatment-entry">
               <p>
                 Data: {treatment.data} - Procedimento: {treatment.procedimento}{" "}

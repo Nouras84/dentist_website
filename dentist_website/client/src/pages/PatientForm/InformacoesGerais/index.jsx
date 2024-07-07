@@ -115,10 +115,10 @@ function InformacoesGerais() {
   }, [patientInfo.informacoesGerais, saveData]);
 
   // Effect for autosaving at intervals
-  useEffect(() => {
-    const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
-    return () => clearInterval(autosaveInterval); // Cleanup on unmount
-  }, [autosaveForm]);
+  // useEffect(() => {
+  //   const autosaveInterval = setInterval(autosaveForm, 30000); // Autosave every 30 seconds
+  //   return () => clearInterval(autosaveInterval); // Cleanup on unmount
+  // }, [autosaveForm]);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -246,7 +246,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tratamentoMedico"
             value="sim"
-            checked={patientInfo.informacoesGerais.tratamentoMedico === "sim"}
+            checked={patientInfo?.informacoesGerais?.tratamentoMedico === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -254,17 +254,19 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tratamentoMedico"
             value="não"
-            checked={patientInfo.informacoesGerais.tratamentoMedico === "não"}
+            checked={patientInfo?.informacoesGerais?.tratamentoMedico === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.tratamentoMedico === "sim" && (
+        {patientInfo?.informacoesGerais?.tratamentoMedico === "sim" && (
           <input
             type="text"
             name="informacoesGerais.tratamentoMedicoDetails"
             placeholder="Detalhes do tratamento médico"
-            value={patientInfo.informacoesGerais.tratamentoMedicoDetails || ""}
+            value={
+              patientInfo?.informacoesGerais?.tratamentoMedicoDetails || ""
+            }
             onChange={handleChange}
           />
         )}
@@ -277,7 +279,7 @@ function InformacoesGerais() {
             name="informacoesGerais.alergiaMedicamentosa"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.alergiaMedicamentosa === "sim"
+              patientInfo?.informacoesGerais?.alergiaMedicamentosa === "sim"
             }
             onChange={handleChange}
           />
@@ -287,19 +289,19 @@ function InformacoesGerais() {
             name="informacoesGerais.alergiaMedicamentosa"
             value="não"
             checked={
-              patientInfo.informacoesGerais.alergiaMedicamentosa === "não"
+              patientInfo?.informacoesGerais?.alergiaMedicamentosa === "não"
             }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.alergiaMedicamentosa === "sim" && (
+        {patientInfo?.informacoesGerais?.alergiaMedicamentosa === "sim" && (
           <input
             type="text"
             name="informacoesGerais.alergiaMedicamentosaDetails"
             placeholder="Detalhes da alergia medicamentosa"
             value={
-              patientInfo.informacoesGerais.alergiaMedicamentosaDetails || ""
+              patientInfo?.informacoesGerais?.alergiaMedicamentosaDetails || ""
             }
             onChange={handleChange}
           />
@@ -314,7 +316,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.consideraNervoso"
             value="sim"
-            checked={patientInfo.informacoesGerais.consideraNervoso === "sim"}
+            checked={patientInfo?.informacoesGerais?.consideraNervoso === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -322,7 +324,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.consideraNervoso"
             value="não"
-            checked={patientInfo.informacoesGerais.consideraNervoso === "não"}
+            checked={patientInfo?.informacoesGerais?.consideraNervoso === "não"}
             onChange={handleChange}
           />
           Não
@@ -336,7 +338,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alergiaOutros"
             value="sim"
-            checked={patientInfo.informacoesGerais.alergiaOutros === "sim"}
+            checked={patientInfo?.informacoesGerais?.alergiaOutros === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -344,17 +346,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alergiaOutros"
             value="não"
-            checked={patientInfo.informacoesGerais.alergiaOutros === "não"}
+            checked={patientInfo?.informacoesGerais?.alergiaOutros === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.alergiaOutros === "sim" && (
+        {patientInfo?.informacoesGerais?.alergiaOutros === "sim" && (
           <input
             type="text"
             name="informacoesGerais.alergiaOutrosDetails"
             placeholder="Detalhes da alergia a outros agentes"
-            value={patientInfo.informacoesGerais.alergiaOutrosDetails || ""}
+            value={patientInfo?.informacoesGerais?.alergiaOutrosDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -368,7 +370,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.consideraAnsioso"
             value="sim"
-            checked={patientInfo.informacoesGerais.consideraAnsioso === "sim"}
+            checked={patientInfo?.informacoesGerais?.consideraAnsioso === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -376,7 +378,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.consideraAnsioso"
             value="não"
-            checked={patientInfo.informacoesGerais.consideraAnsioso === "não"}
+            checked={patientInfo?.informacoesGerais?.consideraAnsioso === "não"}
             onChange={handleChange}
           />
           Não
@@ -391,7 +393,7 @@ function InformacoesGerais() {
             name="informacoesGerais.hospitalizadoCirurgia"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.hospitalizadoCirurgia === "sim"
+              patientInfo?.informacoesGerais?.hospitalizadoCirurgia === "sim"
             }
             onChange={handleChange}
           />
@@ -401,19 +403,19 @@ function InformacoesGerais() {
             name="informacoesGerais.hospitalizadoCirurgia"
             value="não"
             checked={
-              patientInfo.informacoesGerais.hospitalizadoCirurgia === "não"
+              patientInfo?.informacoesGerais?.hospitalizadoCirurgia === "não"
             }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.hospitalizadoCirurgia === "sim" && (
+        {patientInfo?.informacoesGerais?.hospitalizadoCirurgia === "sim" && (
           <input
             type="text"
             name="informacoesGerais.hospitalizadoCirurgiaDetails"
             placeholder="Detalhes da hospitalização/cirurgia"
             value={
-              patientInfo.informacoesGerais.hospitalizadoCirurgiaDetails || ""
+              patientInfo?.informacoesGerais?.hospitalizadoCirurgiaDetails || ""
             }
             onChange={handleChange}
           />
@@ -428,7 +430,7 @@ function InformacoesGerais() {
             name="informacoesGerais.vomitaFrequentemente"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.vomitaFrequentemente === "sim"
+              patientInfo?.informacoesGerais?.vomitaFrequentemente === "sim"
             }
             onChange={handleChange}
           />
@@ -438,7 +440,7 @@ function InformacoesGerais() {
             name="informacoesGerais.vomitaFrequentemente"
             value="não"
             checked={
-              patientInfo.informacoesGerais.vomitaFrequentemente === "não"
+              patientInfo?.informacoesGerais?.vomitaFrequentemente === "não"
             }
             onChange={handleChange}
           />
@@ -453,7 +455,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.gravida"
             value="sim"
-            checked={patientInfo.informacoesGerais.gravida === "sim"}
+            checked={patientInfo?.informacoesGerais?.gravida === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -461,17 +463,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.gravida"
             value="não"
-            checked={patientInfo.informacoesGerais.gravida === "não"}
+            checked={patientInfo?.informacoesGerais?.gravida === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.gravida === "sim" && (
+        {patientInfo?.informacoesGerais?.gravida === "sim" && (
           <input
             type="text"
             name="informacoesGerais.gravidaDetails"
             placeholder="Detalhes da gravidez"
-            value={patientInfo.informacoesGerais.gravidaDetails || ""}
+            value={patientInfo?.informacoesGerais?.gravidaDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -485,7 +487,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.amamentando"
             value="sim"
-            checked={patientInfo.informacoesGerais.amamentando === "sim"}
+            checked={patientInfo?.informacoesGerais?.amamentando === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -493,7 +495,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.amamentando"
             value="não"
-            checked={patientInfo.informacoesGerais.amamentando === "não"}
+            checked={patientInfo?.informacoesGerais?.amamentando === "não"}
             onChange={handleChange}
           />
           Não
@@ -507,7 +509,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.faltaArCansaco"
             value="sim"
-            checked={patientInfo.informacoesGerais.faltaArCansaco === "sim"}
+            checked={patientInfo?.informacoesGerais?.faltaArCansaco === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -515,17 +517,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.faltaArCansaco"
             value="não"
-            checked={patientInfo.informacoesGerais.faltaArCansaco === "não"}
+            checked={patientInfo?.informacoesGerais?.faltaArCansaco === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.faltaArCansaco === "sim" && (
+        {patientInfo?.informacoesGerais?.faltaArCansaco === "sim" && (
           <input
             type="text"
             name="informacoesGerais.faltaArCansacoDetails"
             placeholder="Detalhes da falta de ar ou cansaço"
-            value={patientInfo.informacoesGerais.faltaArCansacoDetails || ""}
+            value={patientInfo?.informacoesGerais?.faltaArCansacoDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -537,7 +539,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.doresPeito"
             value="sim"
-            checked={patientInfo.informacoesGerais.doresPeito === "sim"}
+            checked={patientInfo?.informacoesGerais?.doresPeito === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -545,7 +547,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.doresPeito"
             value="não"
-            checked={patientInfo.informacoesGerais.doresPeito === "não"}
+            checked={patientInfo?.informacoesGerais?.doresPeito === "não"}
             onChange={handleChange}
           />
           Não
@@ -559,7 +561,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alteracaoPressao"
             value="sim"
-            checked={patientInfo.informacoesGerais.alteracaoPressao === "sim"}
+            checked={patientInfo?.informacoesGerais?.alteracaoPressao === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -567,7 +569,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alteracaoPressao"
             value="não"
-            checked={patientInfo.informacoesGerais.alteracaoPressao === "não"}
+            checked={patientInfo?.informacoesGerais?.alteracaoPressao === "não"}
             onChange={handleChange}
           />
           Não
@@ -581,7 +583,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoInfarto"
             value="sim"
-            checked={patientInfo.informacoesGerais.historicoInfarto === "sim"}
+            checked={patientInfo?.informacoesGerais?.historicoInfarto === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -589,12 +591,12 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoInfarto"
             value="não"
-            checked={patientInfo.informacoesGerais.historicoInfarto === "não"}
+            checked={patientInfo?.informacoesGerais?.historicoInfarto === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.historicoInfarto === "sim" && (
+        {patientInfo?.informacoesGerais?.historicoInfarto === "sim" && (
           <input
             type="text"
             name="informacoesGerais.historicoInfartoDetails"
@@ -611,7 +613,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoAVC"
             value="sim"
-            checked={patientInfo.informacoesGerais.historicoAVC === "sim"}
+            checked={patientInfo?.informacoesGerais?.historicoAVC === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -619,17 +621,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoAVC"
             value="não"
-            checked={patientInfo.informacoesGerais.historicoAVC === "não"}
+            checked={patientInfo?.informacoesGerais?.historicoAVC === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.historicoAVC === "sim" && (
+        {patientInfo?.informacoesGerais?.historicoAVC === "sim" && (
           <input
             type="text"
             name="informacoesGerais.historicoAVCDetails"
             placeholder="Detalhes do AVC"
-            value={patientInfo.informacoesGerais.historicoAVCDetails || ""}
+            value={patientInfo?.informacoesGerais?.historicoAVCDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -641,7 +643,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoAsma"
             value="sim"
-            checked={patientInfo.informacoesGerais.historicoAsma === "sim"}
+            checked={patientInfo?.informacoesGerais?.historicoAsma === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -649,17 +651,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoAsma"
             value="não"
-            checked={patientInfo.informacoesGerais.historicoAsma === "não"}
+            checked={patientInfo?.informacoesGerais?.historicoAsma === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.historicoAsma === "sim" && (
+        {patientInfo?.informacoesGerais?.historicoAsma === "sim" && (
           <input
             type="text"
             name="informacoesGerais.historicoAsmaDetails"
             placeholder="Detalhes da asma"
-            value={patientInfo.informacoesGerais.historicoAsmaDetails || ""}
+            value={patientInfo?.informacoesGerais?.historicoAsmaDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -671,7 +673,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoDiabetes"
             value="sim"
-            checked={patientInfo.informacoesGerais.historicoDiabetes === "sim"}
+            checked={
+              patientInfo?.informacoesGerais?.historicoDiabetes === "sim"
+            }
             onChange={handleChange}
           />
           Sim
@@ -679,17 +683,21 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.historicoDiabetes"
             value="não"
-            checked={patientInfo.informacoesGerais.historicoDiabetes === "não"}
+            checked={
+              patientInfo?.informacoesGerais?.historicoDiabetes === "não"
+            }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.historicoDiabetes === "sim" && (
+        {patientInfo?.informacoesGerais?.historicoDiabetes === "sim" && (
           <input
             type="text"
             name="informacoesGerais.historicoDiabetesDetails"
             placeholder="Detalhes do diabetes"
-            value={patientInfo.informacoesGerais.historicoDiabetesDetails || ""}
+            value={
+              patientInfo?.informacoesGerais?.historicoDiabetesDetails || ""
+            }
             onChange={handleChange}
           />
         )}
@@ -702,7 +710,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tuberculose"
             value="sim"
-            checked={patientInfo.informacoesGerais.tuberculose === "sim"}
+            checked={patientInfo?.informacoesGerais?.tuberculose === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -710,17 +718,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tuberculose"
             value="não"
-            checked={patientInfo.informacoesGerais.tuberculose === "não"}
+            checked={patientInfo?.informacoesGerais?.tuberculose === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.tuberculose === "sim" && (
+        {patientInfo?.informacoesGerais?.tuberculose === "sim" && (
           <input
             type="text"
             name="informacoesGerais.tuberculoseDetails"
             placeholder="Detalhes da tuberculose"
-            value={patientInfo.informacoesGerais.tuberculoseDetails || ""}
+            value={patientInfo?.informacoesGerais?.tuberculoseDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -733,7 +741,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.sedeConstante"
             value="sim"
-            checked={patientInfo.informacoesGerais.sedeConstante === "sim"}
+            checked={patientInfo?.informacoesGerais?.sedeConstante === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -741,7 +749,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.sedeConstante"
             value="não"
-            checked={patientInfo.informacoesGerais.sedeConstante === "não"}
+            checked={patientInfo?.informacoesGerais?.sedeConstante === "não"}
             onChange={handleChange}
           />
           Não
@@ -755,7 +763,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.urinaNoite"
             value="sim"
-            checked={patientInfo.informacoesGerais.urinaNoite === "sim"}
+            checked={patientInfo?.informacoesGerais?.urinaNoite === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -763,7 +771,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.urinaNoite"
             value="não"
-            checked={patientInfo.informacoesGerais.urinaNoite === "não"}
+            checked={patientInfo?.informacoesGerais?.urinaNoite === "não"}
             onChange={handleChange}
           />
           Não
@@ -777,7 +785,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alteracaoHormonal"
             value="sim"
-            checked={patientInfo.informacoesGerais.alteracaoHormonal === "sim"}
+            checked={
+              patientInfo?.informacoesGerais?.alteracaoHormonal === "sim"
+            }
             onChange={handleChange}
           />
           Sim
@@ -785,17 +795,21 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.alteracaoHormonal"
             value="não"
-            checked={patientInfo.informacoesGerais.alteracaoHormonal === "não"}
+            checked={
+              patientInfo?.informacoesGerais?.alteracaoHormonal === "não"
+            }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.alteracaoHormonal === "sim" && (
+        {patientInfo?.informacoesGerais?.alteracaoHormonal === "sim" && (
           <input
             type="text"
             name="informacoesGerais.alteracaoHormonalDetails"
             placeholder="Detalhes da alteração hormonal"
-            value={patientInfo.informacoesGerais.alteracaoHormonalDetails || ""}
+            value={
+              patientInfo?.informacoesGerais?.alteracaoHormonalDetails || ""
+            }
             onChange={handleChange}
           />
         )}
@@ -808,7 +822,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.desmaioDistrimia"
             value="sim"
-            checked={patientInfo.informacoesGerais.desmaioDistrimia === "sim"}
+            checked={patientInfo?.informacoesGerais?.desmaioDistrimia === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -816,17 +830,19 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.desmaioDistrimia"
             value="não"
-            checked={patientInfo.informacoesGerais.desmaioDistrimia === "não"}
+            checked={patientInfo?.informacoesGerais?.desmaioDistrimia === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.desmaioDistrimia === "sim" && (
+        {patientInfo?.informacoesGerais?.desmaioDistrimia === "sim" && (
           <input
             type="text"
             name="informacoesGerais.desmaioDistrimiaDetails"
             placeholder="Detalhes de desmaio ou distrimia"
-            value={patientInfo.informacoesGerais.desmaioDistrimiaDetails || ""}
+            value={
+              patientInfo?.informacoesGerais?.desmaioDistrimiaDetails || ""
+            }
             onChange={handleChange}
           />
         )}
@@ -840,8 +856,8 @@ function InformacoesGerais() {
             name="informacoesGerais.hipotireoidismoHipertireoidismo"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.hipotireoidismoHipertireoidismo ===
-              "sim"
+              patientInfo?.informacoesGerais
+                ?.hipotireoidismoHipertireoidismo === "sim"
             }
             onChange={handleChange}
           />
@@ -851,22 +867,22 @@ function InformacoesGerais() {
             name="informacoesGerais.hipotireoidismoHipertireoidismo"
             value="não"
             checked={
-              patientInfo.informacoesGerais.hipotireoidismoHipertireoidismo ===
-              "não"
+              patientInfo?.informacoesGerais
+                ?.hipotireoidismoHipertireoidismo === "não"
             }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.hipotireoidismoHipertireoidismo ===
+        {patientInfo?.informacoesGerais?.hipotireoidismoHipertireoidismo ===
           "sim" && (
           <input
             type="text"
             name="informacoesGerais.hipotireoidismoHipertireoidismoDetails"
             placeholder="Detalhes do hipotireoidismo ou hipertireoidismo"
             value={
-              patientInfo.informacoesGerais
-                .hipotireoidismoHipertireoidismoDetails || ""
+              patientInfo?.informacoesGera
+                ?.hipotireoidismoHipertireoidismoDetails || ""
             }
             onChange={handleChange}
           />
@@ -881,7 +897,7 @@ function InformacoesGerais() {
             name="informacoesGerais.dificuldadeMastigar"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.dificuldadeMastigar === "sim"
+              patientInfo?.informacoesGerais?.dificuldadeMastigar === "sim"
             }
             onChange={handleChange}
           />
@@ -891,7 +907,7 @@ function InformacoesGerais() {
             name="informacoesGerais.dificuldadeMastigar"
             value="não"
             checked={
-              patientInfo.informacoesGerais.dificuldadeMastigar === "não"
+              patientInfo?.informacoesGerais?.dificuldadeMastigar === "não"
             }
             onChange={handleChange}
           />
@@ -907,7 +923,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tpmMenopausa"
             value="sim"
-            checked={patientInfo.informacoesGerais.tpmMenopausa === "sim"}
+            checked={patientInfo?.informacoesGerais?.tpmMenopausa === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -915,17 +931,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tpmMenopausa"
             value="não"
-            checked={patientInfo.informacoesGerais.tpmMenopausa === "não"}
+            checked={patientInfo?.informacoesGerais?.tpmMenopausa === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.tpmMenopausa === "sim" && (
+        {patientInfo?.informacoesGerais?.tpmMenopausa === "sim" && (
           <input
             type="text"
             name="informacoesGerais.tpmMenopausaDetails"
             placeholder="Detalhes de TPM ou Menopausa"
-            value={patientInfo.informacoesGerais.tpmMenopausaDetails || ""}
+            value={patientInfo?.informacoesGerais?.tpmMenopausaDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -938,7 +954,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.calculoRenal"
             value="sim"
-            checked={patientInfo.informacoesGerais.calculoRenal === "sim"}
+            checked={patientInfo?.informacoesGerais?.calculoRenal === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -946,17 +962,17 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.calculoRenal"
             value="não"
-            checked={patientInfo.informacoesGerais.calculoRenal === "não"}
+            checked={patientInfo?.informacoesGerais?.calculoRenal === "não"}
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.calculoRenal === "sim" && (
+        {patientInfo?.informacoesGerais?.calculoRenal === "sim" && (
           <input
             type="text"
             name="informacoesGerais.calculoRenalDetails"
             placeholder="Detalhes de cálculo ou insuficiência renal"
-            value={patientInfo.informacoesGerais.calculoRenalDetails || ""}
+            value={patientInfo?.informacoesGerais?.calculoRenalDetails || ""}
             onChange={handleChange}
           />
         )}
@@ -969,7 +985,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.reposicaoHormonal"
             value="sim"
-            checked={patientInfo.informacoesGerais.reposicaoHormonal === "sim"}
+            checked={
+              patientInfo?.informacoesGerais?.reposicaoHormonal === "sim"
+            }
             onChange={handleChange}
           />
           Sim
@@ -977,7 +995,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.reposicaoHormonal"
             value="não"
-            checked={patientInfo.informacoesGerais.reposicaoHormonal === "não"}
+            checked={
+              patientInfo?.informacoesGerais?.reposicaoHormonal === "não"
+            }
             onChange={handleChange}
           />
           Não
@@ -991,7 +1011,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.osteoporose"
             value="sim"
-            checked={patientInfo.informacoesGerais.osteoporose === "sim"}
+            checked={patientInfo?.informacoesGerais?.osteoporose === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -999,7 +1019,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.osteoporose"
             value="não"
-            checked={patientInfo.informacoesGerais.osteoporose === "não"}
+            checked={patientInfo?.informacoesGerais?.osteoporose === "não"}
             onChange={handleChange}
           />
           Não
@@ -1014,7 +1034,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.anemia"
             value="sim"
-            checked={patientInfo.informacoesGerais.anemia === "sim"}
+            checked={patientInfo?.informacoesGerais?.anemia === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1022,7 +1042,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.anemia"
             value="não"
-            checked={patientInfo.informacoesGerais.anemia === "não"}
+            checked={patientInfo?.informacoesGerais?.anemia === "não"}
             onChange={handleChange}
           />
           Não
@@ -1036,7 +1056,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.leucemia"
             value="sim"
-            checked={patientInfo.informacoesGerais.leucemia === "sim"}
+            checked={patientInfo?.informacoesGerais?.leucemia === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1044,7 +1064,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.leucemia"
             value="não"
-            checked={patientInfo.informacoesGerais.leucemia === "não"}
+            checked={patientInfo?.informacoesGerais?.leucemia === "não"}
             onChange={handleChange}
           />
           Não
@@ -1058,7 +1078,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.hemofilia"
             value="sim"
-            checked={patientInfo.informacoesGerais.hemofilia === "sim"}
+            checked={patientInfo?.informacoesGerais?.hemofilia === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1066,7 +1086,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.hemofilia"
             value="não"
-            checked={patientInfo.informacoesGerais.hemofilia === "não"}
+            checked={patientInfo?.informacoesGerais?.hemofilia === "não"}
             onChange={handleChange}
           />
           Não
@@ -1080,7 +1100,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.ingestaoAlcoolica"
             value="sim"
-            checked={patientInfo.informacoesGerais.ingestaoAlcoolica === "sim"}
+            checked={
+              patientInfo?.informacoesGerais?.ingestaoAlcoolica === "sim"
+            }
             onChange={handleChange}
           />
           Sim
@@ -1088,7 +1110,9 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.ingestaoAlcoolica"
             value="não"
-            checked={patientInfo.informacoesGerais.ingestaoAlcoolica === "não"}
+            checked={
+              patientInfo?.informacoesGerais?.ingestaoAlcoolica === "não"
+            }
             onChange={handleChange}
           />
           Não
@@ -1102,7 +1126,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tabagista"
             value="sim"
-            checked={patientInfo.informacoesGerais.tabagista === "sim"}
+            checked={patientInfo?.informacoesGerais?.tabagista === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1110,7 +1134,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.tabagista"
             value="não"
-            checked={patientInfo.informacoesGerais.tabagista === "não"}
+            checked={patientInfo?.informacoesGerais?.tabagista === "não"}
             onChange={handleChange}
           />
           Não
@@ -1125,7 +1149,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.gastrite"
             value="sim"
-            checked={patientInfo.informacoesGerais.gastrite === "sim"}
+            checked={patientInfo?.informacoesGerais?.gastrite === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1133,7 +1157,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.gastrite"
             value="não"
-            checked={patientInfo.informacoesGerais.gastrite === "não"}
+            checked={patientInfo?.informacoesGerais?.gastrite === "não"}
             onChange={handleChange}
           />
           Não
@@ -1147,7 +1171,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.ulceras"
             value="sim"
-            checked={patientInfo.informacoesGerais.ulceras === "sim"}
+            checked={patientInfo?.informacoesGerais?.ulceras === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1155,7 +1179,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.ulceras"
             value="não"
-            checked={patientInfo.informacoesGerais.ulceras === "não"}
+            checked={patientInfo?.informacoesGerais?.ulceras === "não"}
             onChange={handleChange}
           />
           Não
@@ -1169,7 +1193,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.hepatite"
             value="sim"
-            checked={patientInfo.informacoesGerais.hepatite === "sim"}
+            checked={patientInfo?.informacoesGerais?.hepatite === "sim"}
             onChange={handleChange}
           />
           Sim
@@ -1177,7 +1201,7 @@ function InformacoesGerais() {
             type="radio"
             name="informacoesGerais.hepatite"
             value="não"
-            checked={patientInfo.informacoesGerais.hepatite === "não"}
+            checked={patientInfo?.informacoesGerais?.hepatite === "não"}
             onChange={handleChange}
           />
           Não
@@ -1192,7 +1216,7 @@ function InformacoesGerais() {
             name="informacoesGerais.sangramentoPosTraumaCirurgia"
             value="sim"
             checked={
-              patientInfo.informacoesGerais.sangramentoPosTraumaCirurgia ===
+              patientInfo?.informacoesGerais?.sangramentoPosTraumaCirurgia ===
               "sim"
             }
             onChange={handleChange}
@@ -1203,22 +1227,22 @@ function InformacoesGerais() {
             name="informacoesGerais.sangramentoPosTraumaCirurgia"
             value="não"
             checked={
-              patientInfo.informacoesGerais.sangramentoPosTraumaCirurgia ===
+              patientInfo?.informacoesGerais?.sangramentoPosTraumaCirurgia ===
               "não"
             }
             onChange={handleChange}
           />
           Não
         </div>
-        {patientInfo.informacoesGerais.sangramentoPosTraumaCirurgia ===
+        {patientInfo?.informacoesGerais?.sangramentoPosTraumaCirurgia ===
           "sim" && (
           <input
             type="text"
             name="informacoesGerais.sangramentoPosTraumaCirurgiaDetails"
             placeholder="Detalhes do sangramento"
             value={
-              patientInfo.informacoesGerais
-                .sangramentoPosTraumaCirurgiaDetails || ""
+              patientInfo?.informacoesGerais
+                ?.sangramentoPosTraumaCirurgiaDetails || ""
             }
             onChange={handleChange}
           />
@@ -1231,7 +1255,7 @@ function InformacoesGerais() {
           type="text"
           name="informacoesGerais.outrasDoencas"
           placeholder="Detalhes de outras doenças"
-          value={patientInfo.informacoesGerais.outrasDoencas || ""}
+          value={patientInfo?.informacoesGerais?.outrasDoencas || ""}
           onChange={handleChange}
         />
       </div>
