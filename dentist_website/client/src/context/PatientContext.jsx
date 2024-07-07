@@ -439,30 +439,6 @@ export const PatientProvider = ({ children }) => {
     }
   }, [patientInfo.patientId, patientInfo.procedimentos]);
 
-  const saveTreatmentsData = useCallback(async () => {
-    const relevantTreatments = {
-      tratamentosExecutados: patientInfo?.savedTreatments, // Use savedTreatments from context
-    };
-
-    try {
-      await axios.patch(
-        `http://localhost:5005/patients/${
-          patientInfo.patientId || patientInfo._id
-        }/tratamento-executado`,
-        relevantTreatments,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Tratamentos salvos com sucesso");
-    } catch (error) {
-      console.error("Falha ao salvar tratamentos", error);
-      throw new Error("Falha ao salvar tratamentos. Tente novamente.");
-    }
-  }, [patientInfo.savedTreatments, patientInfo.patientId]); // Ensure dependencies are correct
-
   return (
     <PatientContext.Provider
       value={{
@@ -483,7 +459,6 @@ export const PatientProvider = ({ children }) => {
         saveHistoricoBucalData,
         saveInformacoesGeraisData,
         saveProceduresData,
-        saveTreatmentsData,
       }}
     >
       {children}

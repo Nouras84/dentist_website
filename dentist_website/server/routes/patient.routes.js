@@ -62,22 +62,6 @@ router.patch("/:id/general-info", async (req, res) => {
   }
 });
 
-// router.patch("/:id/procedimento", async (req, res) => {
-//   console.log("Received data for procedures:", req.body);
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send("Patient not found");
-//     }
-//     patient.procedimentos.push(req.body.procedimentos[0]); // Make sure you are pushing the right object structure
-//     await patient.save();
-//     res.status(200).send(patient);
-//   } catch (error) {
-//     console.error("Error updating procedures:", error);
-//     res.status(400).send(error);
-//   }
-// });
-
 // Correct use of uploadProfile middleware for routes needing single file upload
 router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
   const { id } = req.params;
@@ -128,67 +112,48 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
   }
 });
 
-// router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const updateData = req.body;
-
-//     // If file is uploaded, include it in the update
-//     if (req.file) {
-//       updateData.profilePhoto = {
-//         path: req.file.path,
-//         description: updateData.profilePhotoDescription,
-//       };
-//     }
-
-//     const updatedPatient = await Patient.findByIdAndUpdate(
-//       id,
-//       { $set: updateData },
-//       { new: true }
-//     );
-
-//     if (!updatedPatient) {
-//       return res.status(404).send({ message: "Patient not found." });
-//     }
-//     res.status(200).send(updatedPatient);
-//   } catch (error) {
-//     console.error("Failed to update patient:", error);
-//     res
-//       .status(500)
-//       .send({ message: "Internal server error", details: error.message });
-//   }
-// });
-
-// Ensure no duplicate or overlapping route definitions
-// Example: Check if any other route accidentally handles the same path
-
 // Route for adding or updating treatment data for a patient
-// Route for adding or updating treatment data for a patient
-router.patch("/:id/tratamento-executado", async (req, res) => {
-  try {
-    const patient = await Patient.findById(req.params.id);
-    if (!patient) {
-      return res.status(404).send({ message: "Patient not found" });
+router.patch(
+  "/:patientId/:tratamentoId/tratamento-executado",
+  async (req, res) => {
+    try {
+      const patient = await Patient.findById(req.params.patientId);
+      const tratamentoId = req.params.tratamentoId;
+
+      if (!patient) {
+        return res.status(404).send({ message: "Patient not found" });
+      }
+
+      const updatedTreatmentData = req.body.patientDataOnEdit;
+
+      console.log("patient:", patient.nome);
+      console.log("updated treatment data:", updatedTreatmentData);
+
+      const treatment = patient.tratamentosExecutados.id(tratamentoId);
+      console.log("treatment:", treatment);
+      if (!treatment) {
+        return res.status(404).send({ message: "Treatment not found" });
+      }
+
+      Object.keys(updatedTreatmentData).forEach((key) => {
+        treatment[key] = updatedTreatmentData[key];
+      });
+
+      await patient.save();
+      console.log("treatment:", treatment);
+
+      res.status(200).send({
+        message: "Treatment updated successfully",
+        data: treatment,
+      });
+    } catch (error) {
+      console.error("Error updating treatments:", error);
+      res
+        .status(500)
+        .send({ error: "Internal server error", details: error.message });
     }
-
-    // Assuming req.body contains the array of treatment data
-    const updatedTreatments = req.body.tratamentosExecutados;
-
-    // Replace the existing tratamentosExecutados with the new data
-    patient.tratamentosExecutados = updatedTreatments;
-
-    await patient.save();
-
-    res
-      .status(200)
-      .send({ message: "Treatments updated successfully", data: patient });
-  } catch (error) {
-    console.error("Error updating treatments:", error);
-    res
-      .status(500)
-      .send({ error: "Internal server error", details: error.message });
   }
-});
+);
 
 // PATCH route to update a specific procedure of a patient
 router.patch("/:id/procedimento", async (req, res) => {
@@ -216,122 +181,6 @@ router.patch("/:id/procedimento", async (req, res) => {
     res.status(400).send(error);
   }
 });
-
-// router.patch("/:id/procedimento", async (req, res) => {
-//   console.log(
-//     "Received data for procedures:",
-//     JSON.stringify(req.body, null, 2)
-//   );
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send("Patient not found");
-//     }
-
-//     const newProcedures = req.body.procedimentos;
-
-//     // Merge new procedures with existing ones
-//     newProcedures.forEach((newProc) => {
-//       const existingIndex = patient.procedimentos.findIndex(
-//         (proc) => proc.dente === newProc.dente
-//       );
-//       if (existingIndex !== -1) {
-//         // Update existing procedure
-//         patient.procedimentos[existingIndex] = newProc;
-//       } else {
-//         // Add new procedure
-//         patient.procedimentos.push(newProc);
-//       }
-//     });
-
-//     await patient.save();
-//     console.log(
-//       "Updated patient data:",
-//       JSON.stringify(patient.procedimentos, null, 2)
-//     );
-//     res.status(200).send(patient);
-//   } catch (error) {
-//     console.error("Error updating procedures:", error);
-//     res.status(400).send(error);
-//   }
-// });
-
-// // PATCH route to update existing photographs for a patient
-// router.patch("/:id/photographs", uploadPhotographs, async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send({ message: "Patient not found" });
-//     }
-
-//     // Assuming you are sending photograph updates as an array of objects
-//     // Each object contains the 'path' and 'description' of the photograph
-//     const updatedPhotographs = req.files.map((file, index) => ({
-//       path: file.path,
-//       description: req.body.description[index], // Assuming descriptions are sent as an array
-//     }));
-
-//     // Replace existing photographs array or merge it based on your needs
-//     patient.fotografias = updatedPhotographs;
-//     await patient.save();
-
-//     res.status(200).send({
-//       message: "Photographs updated successfully",
-//       data: patient.fotografias,
-//     });
-//   } catch (error) {
-//     console.error("Error updating photographs:", error);
-//     res
-//       .status(500)
-//       .send({ message: "Internal server error", details: error.message });
-//   }
-// });
-
-// PATCH route to update all patient data
-// router.patch("/update-all/:id", async (req, res) => {
-//   try {
-//     console.log("Received update data:", req.body);
-//     const { id } = req.params;
-//     const updateData = req.body;
-
-//     // Find the patient and update
-//     const updatedPatient = await Patient.findByIdAndUpdate(id, updateData, {
-//       new: true,
-//       runValidators: true,
-//     });
-
-//     if (!updatedPatient) {
-//       return res.status(404).send({ message: "Patient not found" });
-//     }
-
-//     res.status(200).send(updatedPatient);
-//   } catch (error) {
-//     console.error("Failed to update patient:", error);
-//     res
-//       .status(500)
-//       .send({ message: "Internal server error", details: error.message });
-//   }
-// });
-
-// // DELETE route to remove a specific photograph from a patient
-// router.delete("/:id/photograph/:filename", async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send("Patient not found");
-//     }
-
-//     const updatedFotografias = patient.fotografias.filter(
-//       (photo) => !photo.includes(req.params.filename)
-//     );
-//     patient.fotografias = updatedFotografias;
-//     await patient.save();
-
-//     res.status(200).send(patient);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
 
 // PATCH route to update photographs for a patient
 router.patch("/:id/fotografias", uploadPhotographs, async (req, res) => {
@@ -452,28 +301,6 @@ router.get("/check-name", async (req, res) => {
   }
 });
 
-// // POST route for uploading photographs under the "fotografias" tab
-// router.post("/:id/photographs", uploadPhotographs, async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send("Patient not found");
-//     }
-
-//     const photographs = req.files.map((file) => ({
-//       path: file.path,
-//       description: req.body.description, // Ensure this handles multiple descriptions appropriately
-//     }));
-
-//     patient.fotografias.push(...photographs);
-//     await patient.save();
-//     res.status(200).send(patient);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(400).send(error);
-//   }
-// });
-
 // GET route to retrieve all patients
 router.get("/", async (req, res) => {
   try {
@@ -525,28 +352,6 @@ router.delete("/:patientId/procedimento/:procedureIndex", async (req, res) => {
     res.status(400).send(error);
   }
 });
-
-// File: routes/patient.js
-
-// router.post("/:id/tratamento-executado", async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.id);
-//     if (!patient) {
-//       return res.status(404).send({ message: "Patient not found" });
-//     }
-//     // Assuming tratamentosExecutados is an array in your patient schema
-//     patient.tratamentosExecutados.push(req.body);
-//     await patient.save();
-//     res
-//       .status(201)
-//       .send({ message: "Treatment added successfully", data: patient });
-//   } catch (error) {
-//     console.error("Error adding treatment:", error);
-//     res
-//       .status(500)
-//       .send({ error: "Internal server error", details: error.message });
-//   }
-// });
 
 // Search route - make sure this comes before the '/:id' route
 router.get("/search", async (req, res) => {
@@ -612,8 +417,81 @@ router.get("/search", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  // ... implementation ...
+router.get("/:patientId/treatments", async (req, res) => {
+  try {
+    const { patientId } = req.params;
+
+    const patient = await Patient.findById(patientId);
+
+    console.log("patientId:", patientId);
+    console.log("finded patient:", patient.tratamentosExecutados);
+
+    res
+      .status(200)
+      .json({ tratamentoExecutado: patient.tratamentosExecutados });
+  } catch (error) {
+    console.error("error:", error);
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
 });
+router.post("/:patientId/treatments", async (req, res) => {
+  try {
+    const { patientId } = req.params;
+    const { tratamentoExecutadoData } = req.body;
+
+    console.log("patientId:", patientId);
+    console.log("treatment information:", tratamentoExecutadoData);
+
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ errorMessage: "Patient not found" });
+    }
+
+    patient.tratamentosExecutados.unshift(tratamentoExecutadoData);
+
+    await patient.save();
+
+    res
+      .status(200)
+      .json({ tratamentoExecutado: patient.tratamentosExecutados });
+  } catch (error) {
+    console.error("error:", error);
+    res.status(500).json({ errorMessage: "Internal server error" });
+  }
+});
+
+router.delete(
+  "/:patientId/:tratamentoId/tratamento-executado",
+  async (req, res) => {
+    try {
+      const { patientId, tratamentoId } = req.params;
+
+      const patient = await Patient.findById(patientId);
+      if (!patient) {
+        return res.status(404).send({ message: "Patient not found" });
+      }
+
+      const index = patient.tratamentosExecutados.findIndex(
+        (treatment) => treatment._id.toString() === tratamentoId
+      );
+
+      if (index === -1) {
+        return res.status(404).send({ message: "Treatment not found" });
+      }
+
+      patient.tratamentosExecutados.splice(index, 1);
+      await patient.save();
+
+      res.status(200).send({
+        message: "Treatment deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting treatment:", error);
+      res
+        .status(500)
+        .send({ error: "Internal server error", details: error.message });
+    }
+  }
+);
 
 module.exports = router;

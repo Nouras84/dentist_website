@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePatientInfo } from "../../context/PatientContext"; // Adjusted import for usePatientInfo hook
 import { Link } from "react-router-dom"; // Ensure Link is imported
 import { AuthContext } from "../../context/auth.context";
@@ -13,6 +13,8 @@ function Navbar() {
     setAfterClickingTheAddPatientButton,
   } = usePatientInfo(); // Use the context function through the custom hook
   const navigate = useNavigate(); // Hook for navigation
+  const location = useLocation();
+  const path = location.pathname;
 
   const handleAddPatient = async () => {
     try {
@@ -45,7 +47,15 @@ function Navbar() {
         >
           Patient List
         </Link>
-        <button onClick={handleAddPatient}>Add Patient</button>
+        <button
+          style={{
+            opacity: path === "/" ? "1" : "0.5",
+            pointerEvents: path !== "/" && "none",
+          }}
+          onClick={handleAddPatient}
+        >
+          Add Patient
+        </button>
       </div>
       {isLoggedIn && <button onClick={handleLogout}>Logout</button>}
     </nav>

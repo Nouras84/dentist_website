@@ -23,7 +23,6 @@ function PatientFormPage() {
     saveHistoricoBucalData,
     saveInformacoesGeraisData,
     saveProceduresData,
-    saveTreatmentsData,
   } = usePatientInfo();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -41,8 +40,6 @@ function PatientFormPage() {
         await saveInformacoesGeraisData();
       } else if (selectedIndex === 3 && index !== 3) {
         await saveProceduresData();
-      } else if (selectedIndex === 4 && index !== 4) {
-        await saveTreatmentsData();
       }
       setSelectedIndex(index);
     } catch (error) {
@@ -184,8 +181,6 @@ function PatientFormPage() {
         await saveInformacoesGeraisData();
       } else if (selectedIndex === 3) {
         await saveProceduresData();
-      } else if (selectedIndex === 4) {
-        await saveTreatmentsData();
       }
       navigate(`/patient-profile/${patientId}`); // Navigate to the patient profile page
     } catch (error) {

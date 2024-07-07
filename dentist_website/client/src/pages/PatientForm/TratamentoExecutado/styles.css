@@ -1,0 +1,42 @@
+.edit-btn,
+.eliminar-btn {
+  border-radius: 9999px;
+  border: none;
+  max-height: 30px;
+  height: 30px;
+  border: none;
+  padding: 1px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.edit-btn:hover {
+  background-color: #007bff !important;
+  transition: background-color 0.3s ease-in-out;
+  color: white;
+}
+
+.eliminar-btn:hover {
+  background-color: crimson !important;
+  transition: background-color 0.3s ease-in-out;
+  color: white;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.update-success-alert,
+.delete-success-alert {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  z-index: 1000;
+  padding: 0px 25px;
+}

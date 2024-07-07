@@ -4,7 +4,7 @@ const treatmentSchema = new mongoose.Schema({
   data: Date,
   procedimento: String,
   dentista: String,
-  valor: String, // or Number, depending on how you handle currency
+  valor: String,
   notaFiscal: String,
   formaDePagamento: String,
 });
