@@ -18,12 +18,11 @@ function FormularioDoPaciente() {
     "we are coming from add patient button:",
     afterClickingTheAddPatientButton
   );
+  console.log("patient info:", patientInfo);
   const fetchPatient = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:5005/patients/${
-          patientInfo?._id || patientInfo.patientId
-        }`,
+        `http://localhost:5005/patients/${patientId || patientInfo._id}`,
         {},
         { headers: { "Content-Type": "multipart/form-data" } }
       );
