@@ -96,30 +96,30 @@ function FormularioDoPaciente() {
   const autosaveForm = useCallback(() => {
     console.log("Autosaving data...");
     const relevantInfo = {
-      nome: patientInfo.nome,
-      cpf: patientInfo.cpf,
-      dataNascimento: patientInfo.dataNascimento,
-      genero: patientInfo.genero,
-      racaCor: patientInfo.racaCor,
-      estadoCivil: patientInfo.estadoCivil,
-      plano: patientInfo.plano,
-      profissao: patientInfo.profissao,
-      escolaridade: patientInfo.escolaridade,
-      dataConsulta: patientInfo.dataConsulta,
+      nome: patientInfo?.nome,
+      cpf: patientInfo?.cpf,
+      dataNascimento: patientInfo?.dataNascimento,
+      genero: patientInfo?.genero,
+      racaCor: patientInfo?.racaCor,
+      estadoCivil: patientInfo?.estadoCivil,
+      plano: patientInfo?.plano,
+      profissao: patientInfo?.profissao,
+      escolaridade: patientInfo?.escolaridade,
+      dataConsulta: patientInfo?.dataConsulta,
       endereco: {
-        rua: patientInfo.endereco.rua,
-        numero: patientInfo.endereco.numero,
-        bairro: patientInfo.endereco.bairro,
-        cidade: patientInfo.endereco.cidade,
-        estado: patientInfo.endereco.estado,
+        rua: patientInfo?.endereco?.rua,
+        numero: patientInfo?.endereco?.numero,
+        bairro: patientInfo?.endereco?.bairro,
+        cidade: patientInfo?.endereco?.cidade,
+        estado: patientInfo?.endereco?.estado,
       },
       contato: {
-        whatsapp: patientInfo.contato.whatsapp,
-        instagram: patientInfo.contato.instagram,
-        telefone: patientInfo.contato.telefone,
-        email: patientInfo.contato.email,
+        whatsapp: patientInfo?.contato?.whatsapp,
+        instagram: patientInfo?.contato?.instagram,
+        telefone: patientInfo?.contato?.telefone,
+        email: patientInfo?.contato?.email,
       },
-      profilePhoto: patientInfo.profilePhoto,
+      profilePhoto: patientInfo?.profilePhoto,
     };
 
     saveData(relevantInfo);
@@ -360,7 +360,7 @@ function FormularioDoPaciente() {
             type="text"
             name="endereco.rua"
             placeholder="Enter street"
-            value={patientInfo.endereco.rua}
+            value={patientInfo?.endereco?.rua}
             onChange={handleChange}
           />
         </div>
@@ -371,7 +371,7 @@ function FormularioDoPaciente() {
             type="text"
             name="endereco.numero"
             placeholder="Enter number"
-            value={patientInfo.endereco.numero}
+            value={patientInfo?.endereco?.numero}
             onChange={handleChange}
           />
         </div>
@@ -381,7 +381,7 @@ function FormularioDoPaciente() {
             type="text"
             name="endereco.bairro"
             placeholder="Enter neighborhood"
-            value={patientInfo.endereco.bairro}
+            value={patientInfo?.endereco?.bairro}
             onChange={handleChange}
           />
         </div>
@@ -391,7 +391,7 @@ function FormularioDoPaciente() {
             type="text"
             name="endereco.cidade"
             placeholder="Enter city"
-            value={patientInfo.endereco.cidade}
+            value={patientInfo?.endereco?.cidade}
             onChange={handleChange}
           />
         </div>
@@ -401,7 +401,7 @@ function FormularioDoPaciente() {
             type="text"
             name="endereco.estado"
             placeholder="Enter state"
-            value={patientInfo.endereco.estado}
+            value={patientInfo?.endereco?.estado}
             onChange={handleChange}
           />
         </div>
@@ -411,7 +411,7 @@ function FormularioDoPaciente() {
             type="text"
             name="contato.whatsapp"
             placeholder="Enter WhatsApp number"
-            value={patientInfo.contato.whatsapp}
+            value={patientInfo?.contato?.whatsapp}
             onChange={handleChange}
           />
         </div>
@@ -421,7 +421,7 @@ function FormularioDoPaciente() {
             type="text"
             name="contato.instagram"
             placeholder="Enter Instagram handle"
-            value={patientInfo.contato.instagram}
+            value={patientInfo?.contato?.instagram}
             onChange={handleChange}
           />
         </div>
@@ -431,7 +431,7 @@ function FormularioDoPaciente() {
             type="text"
             name="contato.telefone"
             placeholder="Enter phone number"
-            value={patientInfo.contato.telefone}
+            value={patientInfo?.contato?.telefone}
             onChange={handleChange}
           />
         </div>
@@ -441,7 +441,7 @@ function FormularioDoPaciente() {
             type="email"
             name="contato.email"
             placeholder="Enter email"
-            value={patientInfo.contato.email}
+            value={patientInfo?.contato?.email}
             onChange={handleChange}
           />
         </div>

@@ -249,7 +249,9 @@ export const PatientProvider = ({ children }) => {
     ];
 
     relevantFields.forEach((field) => {
-      const value = field.split(".").reduce((o, key) => o[key], patientInfo); // Access nested properties
+      const value = field
+        .split(".")
+        .reduce((o, key) => (o ? o[key] : undefined), patientInfo); // Access nested properties
       if (value != null) {
         formData.append(field, value);
       }
