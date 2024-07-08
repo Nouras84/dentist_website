@@ -21,7 +21,9 @@ function FormularioDoPaciente() {
   const fetchPatient = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:5005/patients/${patientId}`,
+        `http://localhost:5005/patients/${
+          patientInfo?._id || patientInfo.patientId
+        }`,
         {},
         { headers: { "Content-Type": "multipart/form-data" } }
       );

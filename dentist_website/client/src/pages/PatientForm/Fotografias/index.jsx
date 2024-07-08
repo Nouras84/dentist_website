@@ -18,9 +18,12 @@ function Fotografias() {
   const [clickedIndex, setClickedIndex] = useState(false);
 
   const fetchPatient = async () => {
+    console.log("patient id:", patientInfo);
     try {
       const result = await axios.get(
-        `http://localhost:5005/patients/${patientInfo?._id}`,
+        `http://localhost:5005/patients/${
+          patientInfo?._id || patientInfo.patientId
+        }`,
         {},
         { headers: { "Content-Type": "multipart/form-data" } }
       );
