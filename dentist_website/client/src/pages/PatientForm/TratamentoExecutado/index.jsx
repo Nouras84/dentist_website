@@ -77,7 +77,6 @@ function TratamentoExecutado() {
         }/treatments`
       );
 
-      console.log("result:", result);
       if (result.status === 200) {
         setFetchedTreatmentsFromDataBase(result.data.tratamentoExecutado);
       }
@@ -112,7 +111,6 @@ function TratamentoExecutado() {
           }
         );
 
-        console.log("result:", result);
         fetchTreatments();
       } catch (error) {
         console.error("error:", error);

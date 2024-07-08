@@ -20,7 +20,6 @@ function HistoricoBucal() {
             },
           }
         );
-        console.log("Data saved successfully");
       } catch (error) {
         console.error("Failed to save data", error);
       }

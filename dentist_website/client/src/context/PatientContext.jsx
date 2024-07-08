@@ -255,9 +255,7 @@ export const PatientProvider = ({ children }) => {
       }
     });
 
-    if (patientInfo.profilePhoto) {
-      formData.append("profilePhoto", patientInfo.profilePhoto);
-    }
+    console.log("patient info profile photo :", patientInfo.profilePhoto);
 
     try {
       await axios.patch(
@@ -267,7 +265,6 @@ export const PatientProvider = ({ children }) => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log("Data saved successfully");
     } catch (error) {
       console.error("Failed to save data", error);
       if (error.response && error.response.status === 409) {
@@ -432,7 +429,6 @@ export const PatientProvider = ({ children }) => {
           },
         }
       );
-      console.log("Procedures saved successfully");
     } catch (error) {
       console.error("Failed to save procedures", error);
       throw new Error("Failed to save procedures. Please try again.");

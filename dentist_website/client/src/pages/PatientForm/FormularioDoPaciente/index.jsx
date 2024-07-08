@@ -18,10 +18,10 @@ function FormularioDoPaciente() {
     "we are coming from add patient button:",
     afterClickingTheAddPatientButton
   );
-  const fetchUser = async () => {
+  const fetchPatient = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:5005/users/${patientId}`,
+        `http://localhost:5005/patients/${patientId}`,
         {},
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -29,9 +29,6 @@ function FormularioDoPaciente() {
       if (!afterClickingTheAddPatientButton) {
         setPatientInfo(result.data);
       }
-
-      console.log("result from patch:", result);
-      console.log("Data saved successfully");
     } catch (error) {
       console.error("Failed to save data", error);
     }
@@ -39,7 +36,7 @@ function FormularioDoPaciente() {
 
   useEffect(() => {
     if (patientId) {
-      fetchUser();
+      fetchPatient();
     }
   }, [patientId]);
 
@@ -88,7 +85,6 @@ function FormularioDoPaciente() {
           { headers: { "Content-Type": "multipart/form-data" } }
         );
         console.log("result for edit user:", result);
-        console.log("Data saved successfully");
       } catch (error) {
         console.error("Failed to save data", error);
       }
@@ -155,15 +151,37 @@ function FormularioDoPaciente() {
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      setPatientInfo((prevState) => ({
-        ...prevState,
-        profilePhoto: file,
-      }));
+      const formData = new FormData();
+      formData.append("profilePhoto", file);
+
+      try {
+        const result = await axios.post(
+          `http://localhost:5005/patients/${
+            patientInfo.patientId || patientInfo._id
+          }/upload-profile-picture`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        console.log("result:", result);
+        if (result.status === 200) {
+          setPatientInfo((prev) => ({
+            ...prev,
+            profilePhoto: result.data.patient.profilePhoto,
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to save data", error);
+
+        throw new Error("Failed to save data. Please try again.");
+      }
     }
   };
+
+  console.log("patient info after changing the profile pic:", patientInfo);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -175,6 +193,8 @@ function FormularioDoPaciente() {
     autosaveForm(); // Trigger autosave on submit
   };
 
+  console.log("patient info:", patientInfo);
+
   return (
     <form onSubmit={handleSubmit} className="patient-form">
       <fieldset>
@@ -183,6 +203,24 @@ function FormularioDoPaciente() {
         <div>
           <label>Carregar imagem do paciente:</label>
           <input type="file" name="profilePhoto" onChange={handleFileChange} />
+          <div
+            style={{
+              fontSize: "13px",
+              lineHeight: "16px",
+            }}
+          >
+            {patientInfo?.profilePhoto?.path && (
+              <div>
+                Hay un archivo seleccionado :
+                <img
+                  width={50}
+                  height={50}
+                  src={`http://localhost:5005/${patientInfo?.profilePhoto?.path}`}
+                  alt=""
+                />
+              </div>
+            )}
+          </div>
         </div>
         <div>
           <label>Nome*:</label>

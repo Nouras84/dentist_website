@@ -1561,6 +1561,8 @@ function PatientProfile() {
         <div>
           <h2>Foto de Perfil</h2>
           <img
+            width={150}
+            height={150}
             src={`http://localhost:5005/${patient.profilePhoto.path}`}
             alt="Profile"
           />
@@ -2205,6 +2207,8 @@ function PatientProfile() {
           patient.fotografias.map((foto, index) => (
             <div key={index}>
               <img
+                width={200}
+                height={200}
                 src={`http://localhost:5005/${foto.path}`}
                 alt={`Foto ${index + 1}`}
               />

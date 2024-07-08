@@ -67,8 +67,7 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
-  console.log("updateData:", updateData);
-  console.log("param id:", id);
+  console.log("req file:", req.file);
 
   try {
     // If the nome is in the update data, check for existing patients with the same nome
@@ -87,7 +86,7 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
     // Handle file upload
     if (req.file) {
       updateData.profilePhoto = {
-        path: req.file.path,
+        path: req.file,
         description: updateData.profilePhotoDescription,
       };
     }
@@ -111,6 +110,46 @@ router.patch("/:id/update-patient", uploadProfile, async (req, res) => {
       .send({ message: "Internal server error", details: error.message });
   }
 });
+
+// update profile picture
+const multerForPp = require("multer");
+const upload = multerForPp({ dest: "uploads/" });
+router.post(
+  "/:id/upload-profile-picture",
+  upload.single("profilePhoto"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const filePath = req.file.path;
+
+      const patient = await Patient.findByIdAndUpdate(
+        id,
+        {
+          profilePhoto: {
+            path: filePath,
+          },
+        },
+        { new: true }
+      );
+
+      if (!patient) {
+        return res.status(404).send({ message: "Patient not found" });
+      }
+
+      console.log("Updated patient:", patient);
+
+      res.status(200).send({
+        message: "Profile picture uploaded and updated successfully",
+        patient,
+      });
+    } catch (error) {
+      console.error("Failed to update patient:", error);
+      res
+        .status(500)
+        .send({ message: "Internal server error", details: error.message });
+    }
+  }
+);
 
 // Route for adding or updating treatment data for a patient
 router.patch(

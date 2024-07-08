@@ -15,17 +15,13 @@
   align-items: center;
 }
 
-.modal-content p {
-  margin-bottom: 1em;
-}
-
 .modal-content .delete-button {
   background: red;
   color: white;
   border: none;
   padding: 0.5em 1em;
   cursor: pointer;
-  margin-right: 1em;
+  width: 100px;
 }
 
 .modal-content .cancel-button {
@@ -34,6 +30,7 @@
   border: none;
   padding: 0.5em 1em;
   cursor: pointer;
+  width: 100px;
 }
 
 .saved-photos .photo-entry {
