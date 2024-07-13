@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { usePatientInfo } from "../../../context/PatientContext";
 import imageCompression from "browser-image-compression";
 import axios from "axios";

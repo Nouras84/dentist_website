@@ -15,7 +15,7 @@ function PatientFormPage() {
   const { patientId } = useParams();
   const navigate = useNavigate(); // Initialize useNavigate
   const {
-    afterClickingTheAddPatientButton,
+    // afterClickingTheAddPatientButton,
     setAfterClickingTheAddPatientButton,
     patientInfo,
     setPatientInfo,

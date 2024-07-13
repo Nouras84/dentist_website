@@ -40,3 +40,7 @@
   z-index: 1000;
   padding: 0px 25px;
 }
+
+.hidden-info {
+  display: none;
+}

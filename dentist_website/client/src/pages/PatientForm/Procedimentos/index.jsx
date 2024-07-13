@@ -169,7 +169,7 @@ function DentalChart() {
         console.error("Failed to save data", error);
       }
     },
-    [patientInfo.patientId]
+    [patientInfo]
   );
 
   const autosaveProcedures = useCallback(() => {
@@ -181,16 +181,16 @@ function DentalChart() {
     }
   }, [patientInfo.procedimentos, lastSavedProcedures, saveData]);
 
-  // useEffect(() => {
-  //   if (!initialRender.current) {
-  //     if (patientInfo.procedimentos.length > 0) {
-  //       const autosaveInterval = setInterval(autosaveProcedures, 30000);
-  //       return () => clearInterval(autosaveInterval);
-  //     }
-  //   } else {
-  //     initialRender.current = false;
-  //   }
-  // }, [patientInfo.procedimentos, autosaveProcedures]);
+  useEffect(() => {
+    if (!initialRender.current) {
+      if (patientInfo.procedimentos.length > 0) {
+        const autosaveInterval = setInterval(autosaveProcedures, 30000);
+        return () => clearInterval(autosaveInterval);
+      }
+    } else {
+      initialRender.current = false;
+    }
+  }, [patientInfo.procedimentos, autosaveProcedures]);
 
   return (
     <div>
