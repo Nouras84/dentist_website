@@ -460,6 +460,13 @@ import { usePatientInfo } from "../../../context/PatientContext";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 
+// Helper function to format date strings to yyyy-MM-dd format
+function formatDateForInput(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toISOString().split("T")[0];
+}
+
 function FormularioDoPaciente() {
   const { patientId } = useParams();
   const { patientInfo, setPatientInfo, afterClickingTheAddPatientButton } =
@@ -689,7 +696,7 @@ function FormularioDoPaciente() {
           <input
             type="date"
             name="dataConsulta"
-            value={patientInfo.dataConsulta}
+            value={formatDateForInput(patientInfo.dataConsulta)}
             onChange={handleChange}
           />
         </div>
@@ -708,7 +715,7 @@ function FormularioDoPaciente() {
           <input
             type="date"
             name="dataNascimento"
-            value={patientInfo.dataNascimento}
+            value={formatDateForInput(patientInfo.dataNascimento)}
             onChange={handleChange}
           />
         </div>
