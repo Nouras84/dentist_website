@@ -40,7 +40,7 @@
 //     };
 
 //     fetchPatientData();
-//   }, [id]);
+//   }, [id, patientInfo._id]);
 
 //   const handleDelete = async () => {
 //     try {
@@ -1497,21 +1497,26 @@ function PatientProfile() {
       <div>
         <h2>Tratamentos Executados</h2>
         {patient.tratamentosExecutados.length > 0 ? (
-          patient.tratamentosExecutados.map((treatment, index) => (
-            <div key={index}>
-              <p>
-                Data:{" "}
-                {new Date(treatment.data).toLocaleDateString("pt-BR", {
-                  timeZone: "UTC",
-                })}
-              </p>
-              <p>Procedimento: {treatment.procedimento}</p>
-              <p>Dentista: {treatment.dentista}</p>
-              <p>Valor: {treatment.valor?.$numberDecimal || treatment.valor}</p>
-              <p>Nota Fiscal: {treatment.notaFiscal}</p>
-              <p>Forma de Pagamento: {treatment.formaDePagamento}</p>
-            </div>
-          ))
+          patient.tratamentosExecutados
+            .slice()
+            .sort((a, b) => new Date(b.data) - new Date(a.data)) // Sort treatments by date in descending order
+            .map((treatment, index) => (
+              <div key={index}>
+                <p>
+                  Data:{" "}
+                  {new Date(treatment.data).toLocaleDateString("pt-BR", {
+                    timeZone: "UTC",
+                  })}
+                </p>
+                <p>Procedimento: {treatment.procedimento}</p>
+                <p>Dentista: {treatment.dentista}</p>
+                <p>
+                  Valor: {treatment.valor?.$numberDecimal || treatment.valor}
+                </p>
+                <p>Nota Fiscal: {treatment.notaFiscal}</p>
+                <p>Forma de Pagamento: {treatment.formaDePagamento}</p>
+              </div>
+            ))
         ) : (
           <p>Nenhum tratamento registrado.</p>
         )}

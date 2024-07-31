@@ -613,6 +613,14 @@ function FormularioDoPaciente() {
   const handleFileChange = async (event) => {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      const maxSizeMB = 1; // Set the maximum file size to 1MB
+      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+      if (file.size > maxSizeBytes) {
+        alert("O tamanho máximo do arquivo deve ser 1 MB.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("profilePhoto", file);
 
@@ -639,6 +647,36 @@ function FormularioDoPaciente() {
       }
     }
   };
+
+  // const handleFileChange = async (event) => {
+  //   if (event.target.files.length > 0) {
+  //     const file = event.target.files[0];
+  //     const formData = new FormData();
+  //     formData.append("profilePhoto", file);
+
+  //     try {
+  //       const result = await axios.post(
+  //         `http://localhost:5005/patients/${
+  //           patientInfo.patientId || patientInfo._id
+  //         }/upload-profile-picture`,
+  //         formData,
+  //         { headers: { "Content-Type": "multipart/form-data" } }
+  //       );
+
+  //       console.log("result:", result);
+  //       if (result.status === 200) {
+  //         setPatientInfo((prev) => ({
+  //           ...prev,
+  //           profilePhoto: result.data.patient.profilePhoto,
+  //         }));
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to save data", error);
+
+  //       throw new Error("Failed to save data. Please try again.");
+  //     }
+  //   }
+  // };
 
   console.log("patient info after changing the profile pic:", patientInfo);
 
