@@ -1,7 +1,12 @@
-// // src/App.js
+// work perfectly before styling
 // import React from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import { AuthProvider } from "./context/auth.context";
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Routes,
+//   Navigate,
+// } from "react-router-dom";
+// import { AuthProvider, AuthContext } from "./context/auth.context";
 // import { PatientProvider } from "./context/PatientContext";
 // import Navbar from "./components/Navbar/Navbar";
 // import LoginPage from "./pages/LoginPage/LoginPage";
@@ -13,21 +18,36 @@
 //   return (
 //     <AuthProvider>
 //       <PatientProvider>
-//         {" "}
-//         {/* Move PatientProvider here to cover all routes */}
 //         <Router>
-//           <Navbar />
-//           <Routes>
-//             <Route path="/" element={<PatientList />} />
-//             <Route path="/login" element={<LoginPage />} />
-//             <Route
-//               path="/add-patient/:patientId"
-//               element={<PatientFormPage />}
-//             />
-//             <Route path="/add-patient" element={<PatientFormPage />} />
-//             <Route path="/patient-profile/:id" element={<PatientProfile />} />
-//             {/* Add more routes as needed */}
-//           </Routes>
+//           <AuthContext.Consumer>
+//             {({ isLoggedIn }) => (
+//               <>
+//                 {isLoggedIn && <Navbar />}
+//                 <Routes>
+//                   <Route path="/login" element={<LoginPage />} />
+//                   {isLoggedIn ? (
+//                     <>
+//                       <Route path="/" element={<PatientList />} />
+//                       <Route
+//                         path="/add-patient/:patientId"
+//                         element={<PatientFormPage />}
+//                       />
+//                       <Route
+//                         path="/add-patient"
+//                         element={<PatientFormPage />}
+//                       />
+//                       <Route
+//                         path="/patient-profile/:id"
+//                         element={<PatientProfile />}
+//                       />
+//                     </>
+//                   ) : (
+//                     <Route path="*" element={<Navigate to="/login" />} />
+//                   )}
+//                 </Routes>
+//               </>
+//             )}
+//           </AuthContext.Consumer>
 //         </Router>
 //       </PatientProvider>
 //     </AuthProvider>
@@ -36,7 +56,6 @@
 
 // export default App;
 
-// src/App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -51,6 +70,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import PatientFormPage from "./pages/PatientForm";
 import PatientList from "./pages/PatientList/PatientList";
 import PatientProfile from "./pages/PatientProfile";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
 function App() {
   return (

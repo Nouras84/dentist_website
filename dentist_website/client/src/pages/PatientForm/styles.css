@@ -1,3 +1,78 @@
+/* work perfectly befor styling
+ .fixed-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.exit-form-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.exit-form-button:hover {
+  background: #0056b3;
+}
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+} */
+
+/* styles.css */
+/* styles.css */
+
+/* Sticky Dropdown */
+.dropdown-container {
+  position: sticky;
+  top: 56px; /* Adjust this value based on the height of your navbar */
+  z-index: 1000;
+  background: white;
+  padding: 10px 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .nav-tabs {
+    display: none !important;
+  }
+
+  .dropdown-container {
+    display: block !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .dropdown-container {
+    display: none !important;
+  }
+
+  .nav-tabs {
+    display: flex !important;
+    flex-direction: row;
+    margin-bottom: 20px;
+  }
+
+  .nav-tabs .nav-item {
+    flex: 1;
+    text-align: center;
+  }
+
+  .nav-tabs .nav-link {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+/* Existing Styles */
 .fixed-footer {
   position: fixed;
   bottom: 0;
@@ -21,6 +96,7 @@
 .exit-form-button:hover {
   background: #0056b3;
 }
+
 .button-container {
   text-align: center;
   margin-top: 20px;

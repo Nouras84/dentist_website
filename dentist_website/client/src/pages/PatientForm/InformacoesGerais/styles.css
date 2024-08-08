@@ -1,0 +1,35 @@
+.informacoes-gerais-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-column {
+  flex: 1 1 50%;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .form-column {
+    flex: 1 1 100%;
+  }
+}
+
+.radio-group {
+  display: flex;
+  gap: 10px; /* Space between radio buttons */
+  margin-bottom: 10px; /* Adjusts space between the radio buttons and the next question */
+}
+
+.form-group {
+  margin-bottom: 20px; /* Adjusts space between each question */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px; /* Adjusts space between the label and the radio buttons */
+}

@@ -2136,6 +2136,7 @@ function TratamentoExecutado() {
         if (result.status === 200) {
           fetchTreatments();
           setUpdateSuccess(true);
+          closeEditModal(); // Close the modal upon successful update
         }
       } catch (error) {
         console.error("error:", error);
@@ -2192,7 +2193,7 @@ function TratamentoExecutado() {
           }
         `}
       </style>
-      <Modal
+      {/* <Modal
         className="z-9999 p-0 m-0"
         open={editOn}
         onClose={closeEditModal}
@@ -2337,7 +2338,122 @@ function TratamentoExecutado() {
             </button>
           </form>
         </div>
+      </Modal> */}
+
+      <Modal
+        className="tratamento-executado-modal"
+        open={editOn || false}
+        onClose={closeEditModal}
+        sx={{
+          "& > .MuiBackdrop-root": {
+            opacity: "0.2 !important",
+          },
+        }}
+      >
+        <div className="tratamento-executado-modal-content">
+          <button className="close-edit-modal" onClick={closeEditModal}>
+            <svg width={18} height={18} viewBox="0 0 18 18" fill="rgb(0,0,0)">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M9.88006 9.00001L14.4401 13.56L13.5601 14.44L9.00006 9.88001L4.44006 14.44L3.56006 13.56L8.12006 9.00001L3.56006 4.44001L4.44006 3.56001L9.00006 8.12001L13.5601 3.56001L14.4401 4.44001L9.88006 9.00001Z"
+              ></path>
+            </svg>
+          </button>
+          <form
+            className="tratamento-executado-form"
+            onSubmit={(e) => {
+              editTratamento(e);
+            }}
+          >
+            <p className="hidden-info">Paciente: {patientInfo.nome}</p>
+            <p className="hidden-info">Tratamento Id: {treatmentIdOnEdit}</p>
+
+            <h2 className="form-title">Tratamento Executado</h2>
+            <label className="form-label" htmlFor="data">
+              Data:
+            </label>
+            <input
+              type="date"
+              id="data"
+              name="data"
+              value={patientDataOnEdit?.data}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <label className="form-label" htmlFor="procedimento">
+              Procedimento:
+            </label>
+            <input
+              type="text"
+              id="procedimento"
+              name="procedimento"
+              placeholder="Descrição do procedimento"
+              value={patientDataOnEdit?.procedimento}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <label className="form-label" htmlFor="dentista">
+              Dentista:
+            </label>
+            <input
+              type="text"
+              id="dentista"
+              name="dentista"
+              placeholder="Nome do dentista"
+              value={patientDataOnEdit?.dentista}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <label className="form-label" htmlFor="valor">
+              Valor:
+            </label>
+            <input
+              type="text"
+              id="valor"
+              name="valor"
+              placeholder="Valor cobrado"
+              value={patientDataOnEdit?.valor}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <label className="form-label" htmlFor="notaFiscal">
+              Nota Fiscal:
+            </label>
+            <input
+              type="text"
+              id="notaFiscal"
+              name="notaFiscal"
+              placeholder="Número da nota fiscal"
+              value={patientDataOnEdit?.notaFiscal}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <label className="form-label" htmlFor="formaDePagamento">
+              Forma de Pagamento:
+            </label>
+            <input
+              type="text"
+              id="formaDePagamento"
+              name="formaDePagamento"
+              placeholder="Forma de pagamento"
+              value={patientDataOnEdit?.formaDePagamento}
+              onChange={handleChangepatientDataOnEdit}
+              className="form-input"
+            />
+
+            <button type="submit" className="save-procedure-btn">
+              Editar
+            </button>
+          </form>
+        </div>
       </Modal>
+
       <div>
         <form onSubmit={addTreatments} className="tratamento-executado-form">
           <h2>Tratamento Executado</h2>
@@ -2400,9 +2516,11 @@ function TratamentoExecutado() {
             onChange={handleChange}
           />
 
-          <button type="submit">Salvar</button>
+          <button type="submit" className="save-procedure">
+            Salvar
+          </button>
         </form>
-        <div className="saved-treatments">
+        {/* <div className="saved-treatments">
           {fetchedTreatmentsFromDataBase?.length === 0 ? (
             <p>¡El paciente aún no tiene registros de tratamiento!</p>
           ) : (
@@ -2455,7 +2573,62 @@ function TratamentoExecutado() {
                 </div>
               ))
           )}
+        </div> */}
+        <div className="executado-list">
+          {fetchedTreatmentsFromDataBase?.length === 0 ? (
+            <p>¡El paciente aún no tiene registros de tratamiento!</p>
+          ) : (
+            fetchedTreatmentsFromDataBase
+              .slice()
+              .sort((a, b) => new Date(b.data) - new Date(a.data))
+              .map((treatment, index) => (
+                <div key={index} className="executado-item">
+                  <div className="executado-details">
+                    <span className="executado-detail-title">
+                      <b>Data:</b> {treatment.data}
+                    </span>
+                    <span className="executado-detail-title">
+                      <b>Procedimento:</b> {treatment.procedimento}
+                    </span>
+                    <span className="executado-detail-title">
+                      <b>Dentista:</b> {treatment.dentista}
+                    </span>
+                    <span className="executado-detail-title">
+                      <b>Valor:</b> {treatment.valor}
+                    </span>
+                    <span className="executado-detail-title">
+                      <b>Nota Fiscal:</b> {treatment.notaFiscal}
+                    </span>
+                    <span className="executado-detail-title">
+                      <b>Forma de Pagamento:</b> {treatment.formaDePagamento}
+                    </span>
+                  </div>
+                  <div className="executado-buttons">
+                    <button
+                      className="edit-executado"
+                      onClick={() => {
+                        showEditModal(
+                          patientInfo._id || patientInfo.patientId,
+                          treatment._id
+                        );
+                      }}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="delete-executado"
+                      onClick={() => {
+                        eliminarTratamento(treatment._id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))
+          )}
         </div>
+
         {updateSuccess && (
           <div className="update-success-alert">
             <p>¡Información del paciente actualizada!</p>

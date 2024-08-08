@@ -1,0 +1,51 @@
+/* styles.css */
+
+.patient-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-section {
+  flex: 1;
+  min-width: 300px; /* Adjust as needed */
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+legend {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="email"],
+select {
+  width: calc(100% - 10px); /* Adjust width based on padding and borders */
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .patient-form {
+    flex-direction: column;
+  }
+}

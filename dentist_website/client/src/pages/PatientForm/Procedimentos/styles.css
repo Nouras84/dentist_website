@@ -1,3 +1,133 @@
+.dental-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.dental-chart__scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.dental-chart__upper-teeth,
+.dental-chart__lower-teeth {
+  display: inline-block;
+}
+
+.dental-chart__tooth-button {
+  display: inline-block;
+  background-color: lightblue;
+  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  width: 50px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.dental-chart__tooth-button:hover {
+  background-color: #0070bd;
+  color: white;
+}
+
+.dental-chart__gap {
+  display: inline-block;
+  width: 50px;
+}
+
+.side-selection-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  height: auto; /* Adjusts to the content's height */
+  min-height: 400px; /* Ensures a minimum height */
+}
+
+.side-selection-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.side-selection-container {
+  display: grid;
+  grid-template-areas:
+    "V V V"
+    "M O D"
+    "P P P";
+  gap: 10px;
+}
+
+.side-selection-container--21 {
+  grid-template-areas:
+    "P P P"
+    "M O D"
+    "V V V";
+}
+
+.side-selection-container--31 {
+  grid-template-areas:
+    "L L L"
+    "M O D"
+    "V V V";
+}
+
+.side-selection-container--41 {
+  grid-template-areas:
+    "L L L"
+    "M O D"
+    "V V V";
+}
+
+.tooth-side-button {
+  padding: 10px;
+  background-color: lightblue;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 6px;
+}
+
+.tooth-side-button:hover {
+  background-color: #0070bd;
+  color: white;
+}
+
+.tooth-side-button.selected {
+  background-color: #0070bd; /* Change to the desired color */
+  color: white; /* Change text color if needed */
+}
+
+.tooth-side-ok-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 6px;
+}
+
+.tooth-side-ok-button:hover {
+  background-color: darkgreen;
+  color: white;
+}
+
 .confirmation-modal {
   position: fixed;
   top: 50%;
@@ -36,6 +166,7 @@
   padding: 0.5em 1em;
   cursor: pointer;
   margin-right: 1em;
+  border-radius: 6px;
 }
 
 .modal-content .cancel-button {
@@ -44,4 +175,351 @@
   border: none;
   padding: 0.5em 1em;
   cursor: pointer;
+  border-radius: 6px;
+}
+
+/* Add these styles to your styles.css file */
+
+.dental-chart__side-modal {
+  display: grid;
+  grid-template-areas:
+    " .  V  . "
+    " D  O  M "
+    " .  P  . "
+    " .  .  . "
+    " .  OK . "; /* Add a row specifically for the OK button */
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Ensure the modal is the positioning context */
+  padding-bottom: 10px; /* Add padding at the bottom to ensure spacing */
+}
+
+.dental-chart__side-modal button {
+  width: 50px;
+  height: 50px;
+  background-color: lightblue;
+  border: 1px solid #000;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dental-chart__side-modal button:hover {
+  background-color: #0070bd;
+  color: white;
+}
+
+.dental-chart__side-modal .V {
+  grid-area: V;
+}
+
+.dental-chart__side-modal .M {
+  grid-area: M;
+}
+
+.dental-chart__side-modal .O {
+  grid-area: O;
+}
+
+.dental-chart__side-modal .D {
+  grid-area: D;
+}
+
+.dental-chart__side-modal .P {
+  grid-area: P;
+}
+
+.dental-chart__side-modal .L {
+  grid-area: L;
+}
+
+.dental-chart__ok-button {
+  width: 50px;
+  height: 50px;
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dental-chart__ok-button:hover {
+  background-color: #218838;
+  color: white;
+}
+
+.dental-chart__side-modal.tooth-11-18 {
+  grid-template-areas:
+    " .  V  . "
+    " D  O  M "
+    " .  P  . ";
+}
+
+.dental-chart__side-modal.tooth-21-28 {
+  grid-template-areas:
+    " .  V  . "
+    " M  O  D "
+    " .  P  . ";
+}
+
+.dental-chart__side-modal.tooth-41-48 {
+  grid-template-areas:
+    " .  L  . "
+    " D  O  M "
+    " .  V  . ";
+}
+
+.dental-chart__side-modal.tooth-31-38 {
+  grid-template-areas:
+    " .  L  . "
+    " M  O  D "
+    " .  V  . ";
+}
+
+.dental-chart__side-modal button {
+  width: 50px;
+  height: 50px;
+  background-color: lightblue;
+  border: 1px solid #000;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dental-chart__side-modal button:hover {
+  background-color: #0070bd;
+  color: white;
+}
+
+.modal-title {
+  text-align: center;
+  width: 100%; /* Ensures the title takes up the full width of its container */
+  margin-bottom: 20px;
+}
+
+.procedure-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.procedure-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.procedure-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.procedure-form input,
+.procedure-form .react-select__control {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Ensure consistent spacing in mobile view */
+@media (max-width: 600px) {
+  .procedure-form .form-group {
+    margin-bottom: 10px;
+  }
+
+  .procedure-form input,
+  .procedure-form .react-select__control {
+    padding: 6px;
+  }
+}
+
+.saving-sides {
+  background-color: #28a745; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding for the button */
+  border: none; /* Remove border */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  font-size: 16px; /* Font size */
+  margin-top: 10px; /* Space above the button */
+}
+
+.saving-sides:hover {
+  background-color: #218838; /* Darker green on hover */
+  color: white; /* Ensure text stays white on hover */
+}
+.procedure-list {
+  margin-top: 20px; /* Add top margin to the list */
+  width: 100%; /* Full width of the container */
+}
+
+.procedure-item {
+  background-color: #f9f9f9; /* Light grey background */
+  border: 1px solid #ddd; /* Light grey border */
+  padding: 10px; /* Padding around each item */
+  margin: 10px 0; /* Margin between items */
+  border-radius: 6px; /* Rounded corners */
+  display: flex; /* Flexbox for alignment */
+  justify-content: space-between; /* Space between details and buttons */
+  align-items: center; /* Center align items vertically */
+  width: calc(100% - 40px); /* Full width minus padding */
+  margin-left: 20px; /* Add margin to the left */
+  margin-right: 20px; /* Add margin to the right */
+  box-sizing: border-box; /* Ensure padding and borders are included in the width */
+}
+
+.procedure-details {
+  display: flex; /* Flexbox for alignment */
+  flex-direction: column; /* Stack content vertically */
+  flex-grow: 1; /* Allow details to take up remaining space */
+}
+
+.tooth-sides,
+.procedure-detail-title {
+  display: block; /* Ensure each span is on a new line */
+  margin-bottom: 5px; /* Space between lines */
+}
+.tooth-sides b,
+.procedure-detail-title b {
+  font-weight: bold;
+}
+
+.procedure-buttons {
+  display: flex; /* Flexbox for button alignment */
+  gap: 10px; /* Space between buttons */
+}
+
+.edit-procedure,
+.delete-procedure {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 5px 10px; /* Padding */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.edit-procedure:hover,
+.delete-procedure:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.delete-procedure {
+  background-color: #dc3545; /* Red background */
+}
+
+.delete-procedure:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .procedure-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .procedure-buttons {
+    margin-top: 10px;
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .edit-procedure,
+  .delete-procedure {
+    margin: 0;
+    width: 48%;
+  }
+}
+
+.confirmation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.notification-procedure-delete {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content p {
+  margin-bottom: 1em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.notification-procedure-deleteb,
+.notification-procedure-cancelb {
+  width: 100px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.notification-procedure-deleteb {
+  background-color: red;
+  color: white;
+}
+
+.notification-procedure-deleteb:hover {
+  background-color: darkred;
+}
+
+.notification-procedure-cancelb {
+  background-color: grey;
+  color: white;
+}
+
+.notification-procedure-cancelb:hover {
+  background-color: darkgrey;
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .notification-procedure-delete {
+    width: 90%;
+    padding: 1.5em;
+  }
+
+  .modal-content p {
+    margin-bottom: 1.5em;
+  }
+
+  .notification-procedure-deleteb,
+  .notification-procedure-cancelb {
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+  }
 }

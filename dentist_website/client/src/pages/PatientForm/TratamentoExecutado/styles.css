@@ -44,3 +44,208 @@
 .hidden-info {
   display: none;
 }
+
+.executado-list {
+  margin-top: 20px; /* Add top margin to the list */
+  width: 100%; /* Full width of the container */
+}
+
+.executado-item {
+  background-color: #f9f9f9; /* Light grey background */
+  border: 1px solid #ddd; /* Light grey border */
+  padding: 10px; /* Padding around each item */
+  margin: 10px 0; /* Margin between items */
+  border-radius: 6px; /* Rounded corners */
+  display: flex; /* Flexbox for alignment */
+  justify-content: space-between; /* Space between details and buttons */
+  align-items: center; /* Center align items vertically */
+  width: calc(100% - 40px); /* Full width minus padding */
+  margin-left: 20px; /* Add margin to the left */
+  margin-right: 20px; /* Add margin to the right */
+  box-sizing: border-box; /* Ensure padding and borders are included in the width */
+}
+
+.executado-details {
+  display: flex; /* Flexbox for alignment */
+  flex-direction: column; /* Stack content vertically */
+  flex-grow: 1; /* Allow details to take up remaining space */
+}
+
+.executado-detail-title {
+  display: block; /* Ensure each span is on a new line */
+  margin-bottom: 5px; /* Space between lines */
+}
+
+.executado-detail-title b {
+  font-weight: bold;
+}
+
+.executado-buttons {
+  display: flex; /* Flexbox for button alignment */
+  gap: 10px; /* Space between buttons */
+}
+
+.edit-executado,
+.delete-executado {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 5px 10px; /* Padding */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.edit-executado:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.delete-executado {
+  background-color: #dc3545; /* Red background */
+}
+
+.delete-executado:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .executado-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .executado-buttons {
+    margin-top: 10px;
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .edit-executado,
+  .delete-executado {
+    margin: 0;
+    width: 48%;
+  }
+}
+.save-procedure {
+  background-color: #28a745; /* Green background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Padding for the button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  font-size: 16px; /* Font size */
+  display: block; /* Ensure it takes the full width in its container */
+  width: 100%; /* Full width of its container */
+  text-align: center; /* Center align the text */
+  margin-top: 20px; /* Add space from the top */
+  margin-bottom: 40px;
+}
+
+.save-procedure:hover {
+  background-color: #218838; /* Darker green on hover */
+  color: white; /* Ensure text stays white on hover */
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .save-procedure {
+    padding: 10px; /* Adjust padding for smaller screens */
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+}
+
+.tratamento-executado-modal {
+  z-index: 9999;
+  padding: 0;
+  margin: 0;
+}
+
+.tratamento-executado-modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-height: 95vh;
+  background-color: white;
+  outline: none;
+  overflow-y: auto;
+  padding: 40px;
+}
+
+.close-edit-modal {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 58px;
+  height: 58px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.tratamento-executado-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-paciente-nome {
+  margin-bottom: 20px;
+}
+
+.hidden-info {
+  display: none;
+}
+
+.form-title {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.form-label {
+  margin-top: 15px; /* Space above labels */
+  font-weight: bold; /* Bold labels */
+}
+
+.form-input {
+  padding: 10px; /* Padding for input fields */
+  margin-top: 5px; /* Space between label and input */
+  margin-bottom: 10px; /* Space below input fields */
+  border: 1px solid #ccc; /* Border for input fields */
+  border-radius: 6px; /* Rounded corners for input fields */
+}
+
+.save-procedure-btn {
+  background-color: #28a745; /* Green background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Padding for the button */
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  font-size: 16px; /* Font size */
+  margin-top: 20px; /* Space above the button */
+  display: block; /* Ensure it takes the full width in its container */
+  width: 100%; /* Full width of its container */
+  text-align: center; /* Center align the text */
+}
+
+.save-procedure-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+  color: white; /* Ensure text stays white on hover */
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .tratamento-executado-modal-content {
+    width: 90%; /* Adjust width for smaller screens */
+  }
+
+  .form-input {
+    padding: 8px; /* Adjust padding for smaller screens */
+  }
+}
